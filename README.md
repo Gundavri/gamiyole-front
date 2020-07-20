@@ -1,0 +1,1 @@
+Svelte SSR application for Gamiyole
