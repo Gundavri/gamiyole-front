@@ -2,7 +2,23 @@
     import { Link } from "svelte-routing";
     import { AuthService } from '../services/auth.service';
     
-    let authService = AuthService.getInstance();
+    let submitClicked = false;
+    let email = '', password = '';
+
+    const authService = AuthService.getInstance();
+
+    function isValidInputs() {
+        return (email.length >= 6 && email.length <= 64) &&
+            (password.length >= 6 && password.length <= 64) &&
+            authService.emailRegex.test(email);
+    }
+
+    async function onSubmit() {
+        submitClicked = true;
+        if(isValidInputs) {
+            console.log(await authService.login(email, password));
+        }
+    }
 </script>
 
 <style type="scss">
@@ -29,17 +45,38 @@
     <form>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <input bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            {#if email.length === 0 && submitClicked}
+                <span class="error text-danger">Email is required*</span> 
+            {/if}
+            {#if email.length !== 0 && email.length < 6 && submitClicked}
+                <span class="error text-danger">Email is too short*</span> 
+            {/if}
+            {#if email.length > 64 && submitClicked}
+                <span class="error text-danger">Email is too long*</span> 
+            {/if}
+            {#if email.length >= 6 && email.length <= 64 && !authService.emailRegex.test(email) && submitClicked}
+                <span class="error text-danger">Email is not valid*</span> 
+            {/if}
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <input bind:value={password} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            {#if password.length === 0 && submitClicked}
+                <span class="error text-danger">Password is required*</span> 
+            {/if}
+            {#if password.length !== 0 && password.length < 6 && submitClicked}
+                <span class="error text-danger">Password is too short*</span> 
+            {/if}
+            {#if password.length > 64 && submitClicked}
+                <span class="error text-danger">Password is too long*</span> 
+            {/if}
         </div>
         <div class="action">
             <Link class="already" to="/register">
                 Not Registered Yet?
             </Link>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="button" class="btn btn-primary" on:click="{onSubmit}">Login</button>
         </div>
     </form>
 </div>

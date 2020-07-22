@@ -1,15 +1,28 @@
-<script lang="typescript">
+<script>
     import { Link } from "svelte-routing";
     import { AuthService } from '../services/auth.service';
 
     let submitClicked = false;
-    let name, surname, email, password1, password2;
+    let name = '', surname = '', email = '', password1 = '', password2 = '';
 
     const authService = AuthService.getInstance();
 
+    
+
+    function isValidInputs() {
+        return (name.length >= 2 && name.length <= 32) &&
+            (surname.length >= 2 && surname.length <= 32) &&
+            (email.length >= 6 && email.length <= 64) &&
+            authService.emailRegex.test(email) &&
+            (password1.length >= 6 && password1.length <= 64) &&
+            password1 === password2;
+    }
+
     async function onSubmit() {
         submitClicked = true;
-        console.log(await authService.register('asdasd', 'asdasd', 'asdas', 'asdasd'));
+        if(isValidInputs()) {
+            console.log(await authService.register(name, surname, email, password1));
+        }
     }
 </script>
 
@@ -30,6 +43,11 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        .text-danger {
+            font-size: 13px;
+            font-style: italic;
+        }
     }
 </style>
 
@@ -38,25 +56,67 @@
         <div class="form-group">
             <label for="exampleInputEmail1">Name</label>
             <input bind:value={name} type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name">
-            {#if user.loggedIn}
-                <span class="error text-danger">Some Errors related to something</span> 
+            {#if name.length === 0 && submitClicked}
+                <span class="error text-danger">Name is required*</span> 
+            {/if}
+            {#if name.length !== 0 && name.length < 2 && submitClicked}
+                <span class="error text-danger">Name is too short*</span> 
+            {/if}
+            {#if name.length > 32 && submitClicked}
+                <span class="error text-danger">Name is too long*</span> 
             {/if}
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Surname</label>
             <input bind:value={surname} type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter surname">
+            {#if surname.length === 0 && submitClicked}
+                <span class="error text-danger">Surname is required*</span> 
+            {/if}
+            {#if surname.length !== 0 && surname.length < 2 && submitClicked}
+                <span class="error text-danger">Surname is too short*</span> 
+            {/if}
+            {#if surname.length > 32 && submitClicked}
+                <span class="error text-danger">Surname is too long*</span> 
+            {/if}
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            {#if email.length === 0 && submitClicked}
+                <span class="error text-danger">Email is required*</span> 
+            {/if}
+            {#if email.length !== 0 && email.length < 6 && submitClicked}
+                <span class="error text-danger">Email is too short*</span> 
+            {/if}
+            {#if email.length > 64 && submitClicked}
+                <span class="error text-danger">Email is too long*</span> 
+            {/if}
+            {#if email.length >= 6 && email.length <= 64 && !authService.emailRegex.test(email) && submitClicked}
+                <span class="error text-danger">Email is not valid*</span> 
+            {/if}
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
             <input bind:value={password1} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            {#if password1.length === 0 && submitClicked}
+                <span class="error text-danger">Password is required*</span> 
+            {/if}
+            {#if password1.length !== 0 && password1.length < 6 && submitClicked}
+                <span class="error text-danger">Password is too short*</span> 
+            {/if}
+            {#if password1.length > 64 && submitClicked}
+                <span class="error text-danger">Password is too long*</span> 
+            {/if}
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Confirm Password</label>
             <input bind:value={password2} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            {#if password2.length === 0 && submitClicked}
+                <span class="error text-danger">Please confirm password*</span> 
+            {/if}
+            {#if password2.length !== 0 && password1 !== password2 && submitClicked}
+                <span class="error text-danger">Passwords do not match*</span> 
+            {/if}
         </div>
         <div class="action">
             <Link class="already" to="/login">
