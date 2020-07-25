@@ -1,13 +1,18 @@
 <script>
+    import { onMount } from 'svelte';
     import { Link } from "svelte-routing";
     import { AuthService } from '../services/auth.service';
 
     let submitClicked = false;
+    let registerError = false;
     let name = '', surname = '', email = '', password1 = '', password2 = '';
 
     const authService = AuthService.getInstance();
 
-    
+    onMount(() => {
+        authService.deleteToken();
+    });
+
 
     function isValidInputs() {
         return (name.length >= 2 && name.length <= 32) &&
@@ -21,7 +26,13 @@
     async function onSubmit() {
         submitClicked = true;
         if(isValidInputs()) {
-            console.log(await authService.register(name, surname, email, password1));
+            let res = await authService.register(name, surname, email, password1);
+            if(!res.error) {
+                authService.setToken(res.token);
+                navigate('/');
+            } else {
+                registerError = true;
+            }
         }
     }
 </script>
@@ -118,6 +129,9 @@
                 <span class="error text-danger">Passwords do not match*</span> 
             {/if}
         </div>
+        {#if registerError && isValidInputs()}
+                <span class="error text-danger">Email already exists*</span> 
+        {/if}
         <div class="action">
             <Link class="already" to="/login">
                 Already Registered?
