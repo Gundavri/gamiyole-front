@@ -1,11 +1,18 @@
 <script lang="typescript">
-    import { Link } from "svelte-routing";
+    import { onMount } from 'svelte';
+    import { Link, navigate } from "svelte-routing";
     import { AuthService } from '../services/auth.service';
+
     
     let submitClicked = false;
+    let loginError = false;
     let email = '', password = '';
 
     const authService = AuthService.getInstance();
+
+    onMount(() => {
+        authService.deleteToken();
+    });
 
     function isValidInputs() {
         return (email.length >= 6 && email.length <= 64) &&
@@ -16,7 +23,13 @@
     async function onSubmit() {
         submitClicked = true;
         if(isValidInputs) {
-            console.log(await authService.login(email, password));
+            let res = await authService.login(email, password);
+            if(!res.error) {
+                authService.setToken(res.token);
+                navigate('/');
+            } else {
+                loginError = true;
+            }
         }
     }
 </script>
@@ -72,6 +85,9 @@
                 <span class="error text-danger">Password is too long*</span> 
             {/if}
         </div>
+        {#if loginError && isValidInputs()}
+                <span class="error text-danger">Email or Password is wrong*</span> 
+        {/if}
         <div class="action">
             <Link class="already" to="/register">
                 Not Registered Yet?
