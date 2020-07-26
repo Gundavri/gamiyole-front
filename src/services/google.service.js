@@ -1,4 +1,7 @@
 import * as Config from '../config.json';
+import { AuthService } from '../services/auth.service';
+
+const authService = AuthService.getInstance();
 
 export class GoogleService {
     constructor() {
@@ -14,7 +17,11 @@ export class GoogleService {
     }
 
     async getSuggestedPlaces(place) {
-        const res = await (await fetch(`${Config.googleAPIUrl}place/autocomplete/json?input=${place}&key=${GoogleService.apiKey}`)).json();
-        return res;
+        const res = await (await fetch(`${Config.baseAPIUrl}/destination-autocomplete?place=${place}&token=${authService.getToken()}`)).json();
+        let toRet = [];
+        for (let i = 0; i < res.predictions.length; i++) {
+            toRet.push(res.predictions[i].description);
+        }
+        return toRet;
     }
 }

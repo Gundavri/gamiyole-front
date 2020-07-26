@@ -11,7 +11,9 @@
     "rollup-plugin-terser": "^5.2.0",
     "sirv-cli": "^0.4.5",
     "svelte": "^3.18.1",
-    "svelte-routing": "1.4.0"
+    "svelte-autocomplete": "0.0.4",
+    "svelte-routing": "1.4.0",
+    "svelte-select": "^3.10.0"
   },
   "scripts": {
     "start": "run-p watch server",
@@ -23,6 +25,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "node-sass": "^4.14.1",
     "rollup-plugin-sass": "^1.2.2",
+    "simple-svelte-autocomplete": "^1.1.2",
     "svelte-preprocess": "^4.0.8",
     "typescript": "^3.9.7"
   }

@@ -98,6 +98,12 @@
     function detach(node) {
         node.parentNode.removeChild(node);
     }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
     function element(name) {
         return document.createElement(name);
     }
@@ -525,12 +531,25 @@
         else
             dispatch_dev("SvelteDOMSetAttribute", { node, attribute, value });
     }
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev("SvelteDOMSetProperty", { node, property, value });
+    }
     function set_data_dev(text, data) {
         data = '' + data;
         if (text.wholeText === data)
             return;
         dispatch_dev("SvelteDOMSetData", { node: text, data });
         text.data = data;
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
     }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
@@ -2109,7 +2128,7 @@
     	}
     }
 
-    var baseAPIUrl="http://localhost:8082";var googleAPIUrl="https://maps.googleapis.com/maps/api/";
+    var baseAPIUrl="http://localhost:8082";
 
     class DeviceDetectorService {
         constructor() {
@@ -5124,6 +5143,8 @@
     	}
     }
 
+    const authService = AuthService.getInstance();
+
     class GoogleService {
         constructor() {
 
@@ -5138,8 +5159,12 @@
         }
 
         async getSuggestedPlaces(place) {
-            const res = await (await fetch(`${googleAPIUrl}place/autocomplete/json?input=${place}&key=${GoogleService.apiKey}`)).json();
-            return res;
+            const res = await (await fetch(`${baseAPIUrl}/destination-autocomplete?place=${place}&token=${authService.getToken()}`)).json();
+            let toRet = [];
+            for (let i = 0; i < res.predictions.length; i++) {
+                toRet.push(res.predictions[i].description);
+            }
+            return toRet;
         }
     }
 
@@ -5147,6 +5172,162 @@
 
     const { console: console_1 } = globals;
     const file$5 = "src\\routes\\Gagiyoleb.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[16] = list[i];
+    	return child_ctx;
+    }
+
+    // (101:4) {#if destination !== '' && !clicked}
+    function create_if_block$4(ctx) {
+    	let div;
+    	let each_value = /*predictions*/ ctx[4];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			div = claim_element(nodes, "DIV", {});
+    			var div_nodes = children(div);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].l(div_nodes);
+    			}
+
+    			div_nodes.forEach(detach_dev);
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			add_location(div, file$5, 101, 6, 2183);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div, null);
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*predictions, destination, clicked*/ 50) {
+    				each_value = /*predictions*/ ctx[4];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$4.name,
+    		type: "if",
+    		source: "(101:4) {#if destination !== '' && !clicked}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (103:8) {#each predictions as prediction}
+    function create_each_block(ctx) {
+    	let input;
+    	let input_value_value;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler(...args) {
+    		return /*click_handler*/ ctx[9](/*prediction*/ ctx[16], ...args);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			input = element("input");
+    			this.h();
+    		},
+    		l: function claim(nodes) {
+    			input = claim_element(nodes, "INPUT", {
+    				type: true,
+    				class: true,
+    				value: true,
+    				readonly: true
+    			});
+
+    			this.h();
+    		},
+    		h: function hydrate() {
+    			attr_dev(input, "type", "text");
+    			attr_dev(input, "class", "form-control");
+    			input.value = input_value_value = "" + (/*prediction*/ ctx[16] + "/");
+    			input.readOnly = true;
+    			add_location(input, file$5, 103, 10, 2243);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, input, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(input, "click", click_handler, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (dirty & /*predictions*/ 16 && input_value_value !== (input_value_value = "" + (/*prediction*/ ctx[16] + "/")) && input.value !== input_value_value) {
+    				prop_dev(input, "value", input_value_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(input);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(103:8) {#each predictions as prediction}",
+    		ctx
+    	});
+
+    	return block;
+    }
 
     function create_fragment$8(ctx) {
     	let div4;
@@ -5159,23 +5340,25 @@
     	let input0;
     	let input0_placeholder_value;
     	let t2;
+    	let t3;
     	let div1;
     	let label1;
-    	let t3;
     	let t4;
-    	let input1;
     	let t5;
+    	let input1;
+    	let t6;
     	let div2;
     	let label2;
-    	let t6;
     	let t7;
-    	let input2;
     	let t8;
+    	let input2;
+    	let t9;
     	let div3;
     	let button;
-    	let t9;
+    	let t10;
     	let mounted;
     	let dispose;
+    	let if_block = /*destination*/ ctx[1] !== "" && !/*clicked*/ ctx[5] && create_if_block$4(ctx);
 
     	const block = {
     		c: function create() {
@@ -5187,21 +5370,23 @@
     			t1 = space();
     			input0 = element("input");
     			t2 = space();
+    			if (if_block) if_block.c();
+    			t3 = space();
     			div1 = element("div");
     			label1 = element("label");
-    			t3 = text("Time");
-    			t4 = space();
-    			input1 = element("input");
+    			t4 = text("Time");
     			t5 = space();
+    			input1 = element("input");
+    			t6 = space();
     			div2 = element("div");
     			label2 = element("label");
-    			t6 = text("Number of Seats");
-    			t7 = space();
-    			input2 = element("input");
+    			t7 = text("Number of Seats");
     			t8 = space();
+    			input2 = element("input");
+    			t9 = space();
     			div3 = element("div");
     			button = element("button");
-    			t9 = text("Gagiyoleb");
+    			t10 = text("Gagiyoleb");
     			this.h();
     		},
     		l: function claim(nodes) {
@@ -5225,13 +5410,15 @@
 
     			div0_nodes.forEach(detach_dev);
     			t2 = claim_space(form_nodes);
+    			if (if_block) if_block.l(form_nodes);
+    			t3 = claim_space(form_nodes);
     			div1 = claim_element(form_nodes, "DIV", { class: true });
     			var div1_nodes = children(div1);
     			label1 = claim_element(div1_nodes, "LABEL", {});
     			var label1_nodes = children(label1);
-    			t3 = claim_text(label1_nodes, "Time");
+    			t4 = claim_text(label1_nodes, "Time");
     			label1_nodes.forEach(detach_dev);
-    			t4 = claim_space(div1_nodes);
+    			t5 = claim_space(div1_nodes);
 
     			input1 = claim_element(div1_nodes, "INPUT", {
     				type: true,
@@ -5240,14 +5427,14 @@
     			});
 
     			div1_nodes.forEach(detach_dev);
-    			t5 = claim_space(form_nodes);
+    			t6 = claim_space(form_nodes);
     			div2 = claim_element(form_nodes, "DIV", { class: true });
     			var div2_nodes = children(div2);
     			label2 = claim_element(div2_nodes, "LABEL", {});
     			var label2_nodes = children(label2);
-    			t6 = claim_text(label2_nodes, "Number of Seats");
+    			t7 = claim_text(label2_nodes, "Number of Seats");
     			label2_nodes.forEach(detach_dev);
-    			t7 = claim_space(div2_nodes);
+    			t8 = claim_space(div2_nodes);
 
     			input2 = claim_element(div2_nodes, "INPUT", {
     				type: true,
@@ -5256,12 +5443,12 @@
     			});
 
     			div2_nodes.forEach(detach_dev);
-    			t8 = claim_space(form_nodes);
+    			t9 = claim_space(form_nodes);
     			div3 = claim_element(form_nodes, "DIV", { class: true });
     			var div3_nodes = children(div3);
     			button = claim_element(div3_nodes, "BUTTON", { type: true, class: true });
     			var button_nodes = children(button);
-    			t9 = claim_text(button_nodes, "Gagiyoleb");
+    			t10 = claim_text(button_nodes, "Gagiyoleb");
     			button_nodes.forEach(detach_dev);
     			div3_nodes.forEach(detach_dev);
     			form_nodes.forEach(detach_dev);
@@ -5269,36 +5456,36 @@
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(label0, file$5, 83, 12, 1798);
-    			attr_dev(input0, "type", "text");
+    			add_location(label0, file$5, 89, 6, 1827);
+    			attr_dev(input0, "type", "search");
     			attr_dev(input0, "class", "form-control");
     			attr_dev(input0, "placeholder", input0_placeholder_value = /*fromUni*/ ctx[0] ? "To" : "From");
-    			add_location(input0, file$5, 84, 12, 1852);
+    			add_location(input0, file$5, 90, 6, 1875);
     			attr_dev(div0, "class", "form-group");
-    			add_location(div0, file$5, 82, 8, 1760);
-    			add_location(label1, file$5, 88, 12, 2041);
+    			add_location(div0, file$5, 88, 4, 1795);
+    			add_location(label1, file$5, 116, 6, 2568);
     			attr_dev(input1, "type", "time");
     			attr_dev(input1, "class", "form-control");
     			attr_dev(input1, "placeholder", "Time");
-    			add_location(input1, file$5, 89, 12, 2074);
+    			add_location(input1, file$5, 117, 6, 2595);
     			attr_dev(div1, "class", "form-group");
-    			add_location(div1, file$5, 87, 8, 2003);
-    			add_location(label2, file$5, 93, 12, 2235);
+    			add_location(div1, file$5, 115, 4, 2536);
+    			add_location(label2, file$5, 124, 6, 2760);
     			attr_dev(input2, "type", "number");
     			attr_dev(input2, "class", "form-control");
     			attr_dev(input2, "placeholder", "Number of Seats");
-    			add_location(input2, file$5, 94, 12, 2279);
+    			add_location(input2, file$5, 125, 6, 2798);
     			attr_dev(div2, "class", "form-group");
-    			add_location(div2, file$5, 92, 8, 2197);
+    			add_location(div2, file$5, 123, 4, 2728);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-primary");
-    			add_location(button, file$5, 98, 12, 2450);
+    			add_location(button, file$5, 132, 6, 2973);
     			attr_dev(div3, "class", "action svelte-rnsfl4");
-    			add_location(div3, file$5, 97, 8, 2416);
+    			add_location(div3, file$5, 131, 4, 2945);
     			attr_dev(form, "class", "svelte-rnsfl4");
-    			add_location(form, file$5, 81, 4, 1744);
+    			add_location(form, file$5, 87, 2, 1783);
     			attr_dev(div4, "class", "wrapper svelte-rnsfl4");
-    			add_location(div4, file$5, 80, 0, 1717);
+    			add_location(div4, file$5, 86, 0, 1758);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div4, anchor);
@@ -5310,29 +5497,32 @@
     			append_dev(div0, input0);
     			set_input_value(input0, /*destination*/ ctx[1]);
     			append_dev(form, t2);
+    			if (if_block) if_block.m(form, null);
+    			append_dev(form, t3);
     			append_dev(form, div1);
     			append_dev(div1, label1);
-    			append_dev(label1, t3);
-    			append_dev(div1, t4);
+    			append_dev(label1, t4);
+    			append_dev(div1, t5);
     			append_dev(div1, input1);
     			set_input_value(input1, /*time*/ ctx[3]);
-    			append_dev(form, t5);
+    			append_dev(form, t6);
     			append_dev(form, div2);
     			append_dev(div2, label2);
-    			append_dev(label2, t6);
-    			append_dev(div2, t7);
+    			append_dev(label2, t7);
+    			append_dev(div2, t8);
     			append_dev(div2, input2);
     			set_input_value(input2, /*seats*/ ctx[2]);
-    			append_dev(form, t8);
+    			append_dev(form, t9);
     			append_dev(form, div3);
     			append_dev(div3, button);
-    			append_dev(button, t9);
+    			append_dev(button, t10);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[4]),
-    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[5]),
-    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[6]),
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[7]),
+    					listen_dev(input0, "input", /*input_handler*/ ctx[8], false, false, false),
+    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[10]),
+    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[11]),
     					listen_dev(button, "click", onSubmit, false, false, false)
     				];
 
@@ -5346,8 +5536,21 @@
     				attr_dev(input0, "placeholder", input0_placeholder_value);
     			}
 
-    			if (dirty & /*destination*/ 2 && input0.value !== /*destination*/ ctx[1]) {
+    			if (dirty & /*destination*/ 2) {
     				set_input_value(input0, /*destination*/ ctx[1]);
+    			}
+
+    			if (/*destination*/ ctx[1] !== "" && !/*clicked*/ ctx[5]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$4(ctx);
+    					if_block.c();
+    					if_block.m(form, t3);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
     			}
 
     			if (dirty & /*time*/ 8) {
@@ -5362,6 +5565,7 @@
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div4);
+    			if (if_block) if_block.d();
     			mounted = false;
     			run_all(dispose);
     		}
@@ -5386,6 +5590,10 @@
     	
     }
 
+    function choosePrediction() {
+    	
+    }
+
     function instance$8($$self, $$props, $$invalidate) {
     	const googleService = GoogleService.getInstance();
     	const dateHours = new Date().getHours();
@@ -5395,6 +5603,9 @@
     		destination = "",
     		seats = 1,
     		time = (dateHours < 10 ? "0" : "") + dateHours + ":" + (dateMinutes < 10 ? "0" : "") + dateMinutes;
+
+    	let predictions = [];
+    	let clicked = false;
 
     	if (DeviceDetectorService.isBrowser && window.navigator) {
     		isAtUni();
@@ -5417,6 +5628,14 @@
     		});
     	}
 
+    	function getAutoCompletedData() {
+    		if (DeviceDetectorService.isBrowser) {
+    			googleService.getSuggestedPlaces(destination).then(res => {
+    				$$invalidate(4, predictions = res);
+    			});
+    		}
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -5430,6 +5649,16 @@
     		destination = this.value;
     		$$invalidate(1, destination);
     	}
+
+    	const input_handler = res => {
+    		getAutoCompletedData();
+    		$$invalidate(5, clicked = false);
+    	};
+
+    	const click_handler = (prediction, res) => {
+    		$$invalidate(1, destination = prediction);
+    		$$invalidate(5, clicked = true);
+    	};
 
     	function input1_input_handler() {
     		time = this.value;
@@ -5451,9 +5680,13 @@
     		destination,
     		seats,
     		time,
+    		predictions,
+    		clicked,
     		isAtUni,
     		onSubmit,
-    		onKeyup
+    		onKeyup,
+    		getAutoCompletedData,
+    		choosePrediction
     	});
 
     	$$self.$inject_state = $$props => {
@@ -5461,6 +5694,8 @@
     		if ("destination" in $$props) $$invalidate(1, destination = $$props.destination);
     		if ("seats" in $$props) $$invalidate(2, seats = $$props.seats);
     		if ("time" in $$props) $$invalidate(3, time = $$props.time);
+    		if ("predictions" in $$props) $$invalidate(4, predictions = $$props.predictions);
+    		if ("clicked" in $$props) $$invalidate(5, clicked = $$props.clicked);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -5479,18 +5714,6 @@
     				console.log(seats);
     			}
     		}
-
-    		if ($$self.$$.dirty & /*destination*/ 2) {
-    			 {
-    				if (DeviceDetectorService.isBrowser) {
-    					console.log(destination);
-
-    					googleService.getSuggestedPlaces(destination).then(res => {
-    						console.log(res);
-    					});
-    				}
-    			}
-    		}
     	};
 
     	return [
@@ -5498,7 +5721,12 @@
     		destination,
     		seats,
     		time,
+    		predictions,
+    		clicked,
+    		getAutoCompletedData,
     		input0_input_handler,
+    		input_handler,
+    		click_handler,
     		input1_input_handler,
     		input2_input_handler
     	];

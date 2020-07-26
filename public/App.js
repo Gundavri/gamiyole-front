@@ -958,7 +958,7 @@ const Link = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
 	return `<a${spread([{ href: escape(href) }, { "aria-current": escape(ariaCurrent) }, props])}>${$$slots.default ? $$slots.default({}) : ``}</a>`;
 });
 
-var baseAPIUrl="http://localhost:8082";var googleAPIUrl="https://maps.googleapis.com/maps/api/";
+var baseAPIUrl="http://localhost:8082";
 
 class DeviceDetectorService {
     constructor() {
@@ -1275,6 +1275,8 @@ const Gamiyole = create_ssr_component(($$result, $$props, $$bindings, $$slots) =
 	return `gamiyole`;
 });
 
+const authService = AuthService.getInstance();
+
 class GoogleService {
     constructor() {
 
@@ -1289,8 +1291,12 @@ class GoogleService {
     }
 
     async getSuggestedPlaces(place) {
-        const res = await (await fetch(`${googleAPIUrl}place/autocomplete/json?input=${place}&key=${GoogleService.apiKey}`)).json();
-        return res;
+        const res = await (await fetch(`${baseAPIUrl}/destination-autocomplete?place=${place}&token=${authService.getToken()}`)).json();
+        let toRet = [];
+        for (let i = 0; i < res.predictions.length; i++) {
+            toRet.push(res.predictions[i].description);
+        }
+        return toRet;
     }
 }
 
@@ -1298,7 +1304,7 @@ class GoogleService {
 
 const css$3 = {
 	code: ".wrapper.svelte-rnsfl4.svelte-rnsfl4{width:100%;height:100%;display:flex;justify-content:center;align-items:center}form.svelte-rnsfl4.svelte-rnsfl4{width:350px}form.svelte-rnsfl4 .action.svelte-rnsfl4{display:flex;justify-content:space-between;align-items:center}",
-	map: "{\"version\":3,\"file\":\"Gagiyoleb.svelte\",\"sources\":[\"Gagiyoleb.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { DeviceDetectorService } from '../services/deviceDetectorService.service';\\r\\nimport { GoogleService } from '../services/google.service';\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\n\\r\\nconst dateHours = new Date().getHours();\\r\\nconst dateMinutes = new Date().getMinutes();\\r\\nlet fromUni, destination = '', seats = 1,\\r\\n    time = (dateHours < 10 ? '0' : '') + dateHours + ':' + (dateMinutes < 10 ? '0' : '') + dateMinutes;\\r\\n\\r\\n$: {\\r\\n    console.log(time);\\r\\n}\\r\\n\\r\\n$: {\\r\\n    console.log(seats);\\r\\n}\\r\\n\\r\\n$: {\\r\\n    if(DeviceDetectorService.isBrowser) {\\r\\n        console.log(destination);\\r\\n        googleService.getSuggestedPlaces(destination).then(res => {\\r\\n            console.log(res);\\r\\n        });\\r\\n    }\\r\\n}\\r\\n\\r\\nif(DeviceDetectorService.isBrowser && window.navigator) {\\r\\n    isAtUni();\\r\\n}\\r\\n\\r\\nfunction isAtUni() {\\r\\n    let lat, lng;\\r\\n    navigator.geolocation.getCurrentPosition((pos) => {\\r\\n        lat = pos.coords.latitude;\\r\\n        lng = pos.coords.longitude;\\r\\n\\r\\n        const distanceFromCenter = Math.sqrt(Math.pow(lat - DeviceDetectorService.latUni, 2) + Math.pow(lng - DeviceDetectorService.lngUni, 2));\\r\\n        console.log(distanceFromCenter);\\r\\n\\r\\n        if(distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {\\r\\n            fromUni = true;\\r\\n        } else {\\r\\n            fromUni = false;\\r\\n        }\\r\\n    });\\r\\n}\\r\\n\\r\\nfunction onSubmit() {\\r\\n    console.log('submit');\\r\\n}\\r\\n\\r\\n\\r\\nfunction onKeyup(event) {\\r\\n\\r\\n}\\r\\n\\r\\n\\r\\n</script>\\r\\n\\r\\n\\r\\n<style type=\\\"scss\\\">.wrapper {\\n  width: 100%;\\n  height: 100%;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n}\\n\\nform {\\n  width: 350px;\\n}\\nform .action {\\n  display: flex;\\n  justify-content: space-between;\\n  align-items: center;\\n}</style>\\r\\n\\r\\n\\r\\n<div class=\\\"wrapper\\\">\\r\\n    <form>\\r\\n        <div class=\\\"form-group\\\">\\r\\n            <label>{fromUni ? 'To' : 'From'}</label>\\r\\n            <input bind:value=\\\"{destination}\\\" type=\\\"text\\\" class=\\\"form-control\\\" \\r\\n                placeholder=\\\"{fromUni ? 'To' : 'From'}\\\">\\r\\n        </div>\\r\\n        <div class=\\\"form-group\\\">\\r\\n            <label>Time</label>\\r\\n            <input bind:value=\\\"{time}\\\" type=\\\"time\\\" class=\\\"form-control\\\" \\r\\n                placeholder=\\\"Time\\\">\\r\\n        </div>\\r\\n        <div class=\\\"form-group\\\">\\r\\n            <label>Number of Seats</label>\\r\\n            <input bind:value=\\\"{seats}\\\" type=\\\"number\\\" class=\\\"form-control\\\" \\r\\n                placeholder=\\\"Number of Seats\\\">\\r\\n        </div>\\r\\n        <div class=\\\"action\\\">\\r\\n            <button type=\\\"button\\\" class=\\\"btn btn-primary\\\" on:click=\\\"{onSubmit}\\\">Gagiyoleb</button>\\r\\n        </div>\\r\\n    </form>\\r\\n</div>\"],\"names\":[],\"mappings\":\"AA8DmB,QAAQ,4BAAC,CAAC,AAC3B,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,MAAM,CACvB,WAAW,CAAE,MAAM,AACrB,CAAC,AAED,IAAI,4BAAC,CAAC,AACJ,KAAK,CAAE,KAAK,AACd,CAAC,AACD,kBAAI,CAAC,OAAO,cAAC,CAAC,AACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,aAAa,CAC9B,WAAW,CAAE,MAAM,AACrB,CAAC\"}"
+	map: "{\"version\":3,\"file\":\"Gagiyoleb.svelte\",\"sources\":[\"Gagiyoleb.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { DeviceDetectorService } from \\\"../services/deviceDetectorService.service\\\";\\r\\nimport { GoogleService } from \\\"../services/google.service\\\";\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\n\\r\\nconst dateHours = new Date().getHours();\\r\\nconst dateMinutes = new Date().getMinutes();\\r\\nlet fromUni,\\r\\n  destination = \\\"\\\",\\r\\n  seats = 1,\\r\\n  time =\\r\\n    (dateHours < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateHours +\\r\\n    \\\":\\\" +\\r\\n    (dateMinutes < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateMinutes;\\r\\nlet predictions = [];\\r\\nlet clicked = false;\\r\\n\\r\\n$: {\\r\\n  console.log(time);\\r\\n}\\r\\n\\r\\n$: {\\r\\n  console.log(seats);\\r\\n}\\r\\n\\r\\nif (DeviceDetectorService.isBrowser && window.navigator) {\\r\\n  isAtUni();\\r\\n}\\r\\n\\r\\nfunction isAtUni() {\\r\\n  let lat, lng;\\r\\n  navigator.geolocation.getCurrentPosition(pos => {\\r\\n    lat = pos.coords.latitude;\\r\\n    lng = pos.coords.longitude;\\r\\n\\r\\n    const distanceFromCenter = Math.sqrt(\\r\\n      Math.pow(lat - DeviceDetectorService.latUni, 2) +\\r\\n        Math.pow(lng - DeviceDetectorService.lngUni, 2)\\r\\n    );\\r\\n    console.log(distanceFromCenter);\\r\\n\\r\\n    if (distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {\\r\\n      fromUni = true;\\r\\n    } else {\\r\\n      fromUni = false;\\r\\n    }\\r\\n  });\\r\\n}\\r\\n\\r\\nfunction onSubmit() {\\r\\n  console.log(\\\"submit\\\");\\r\\n}\\r\\n\\r\\nfunction onKeyup(event) {}\\r\\n\\r\\nfunction getAutoCompletedData() {\\r\\n  if (DeviceDetectorService.isBrowser) {\\r\\n    googleService.getSuggestedPlaces(destination).then(res => {\\r\\n      predictions = res;\\r\\n    });\\r\\n  }\\r\\n}\\r\\n\\r\\nfunction choosePrediction() {}\\r\\n</script>\\r\\n\\r\\n<style type=\\\"scss\\\">.wrapper {\\n  width: 100%;\\n  height: 100%;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n}\\n\\nform {\\n  width: 350px;\\n}\\nform .action {\\n  display: flex;\\n  justify-content: space-between;\\n  align-items: center;\\n}</style>\\r\\n\\r\\n<div class=\\\"wrapper\\\">\\r\\n  <form>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>{fromUni ? 'To' : 'From'}</label>\\r\\n      <input\\r\\n        bind:value={destination}\\r\\n        type=\\\"search\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder={fromUni ? 'To' : 'From'}\\r\\n        on:input={res => {\\r\\n          getAutoCompletedData();\\r\\n          clicked = false;\\r\\n        }} />\\r\\n    </div>\\r\\n    {#if destination !== '' && !clicked}\\r\\n      <div>\\r\\n        {#each predictions as prediction}\\r\\n          <input\\r\\n            type=\\\"text\\\"\\r\\n            class=\\\"form-control\\\"\\r\\n            value=\\\"{prediction}/\\\"\\r\\n            readonly\\r\\n            on:click={res => {\\r\\n              destination = prediction;\\r\\n              clicked = true;\\r\\n            }} />\\r\\n        {/each}\\r\\n      </div>\\r\\n    {/if}\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>Time</label>\\r\\n      <input\\r\\n        bind:value={time}\\r\\n        type=\\\"time\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"Time\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>Number of Seats</label>\\r\\n      <input\\r\\n        bind:value={seats}\\r\\n        type=\\\"number\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"Number of Seats\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"action\\\">\\r\\n      <button type=\\\"button\\\" class=\\\"btn btn-primary\\\" on:click={onSubmit}>\\r\\n        Gagiyoleb\\r\\n      </button>\\r\\n    </div>\\r\\n  </form>\\r\\n</div>\\r\\n\"],\"names\":[],\"mappings\":\"AAqEmB,QAAQ,4BAAC,CAAC,AAC3B,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,MAAM,CACvB,WAAW,CAAE,MAAM,AACrB,CAAC,AAED,IAAI,4BAAC,CAAC,AACJ,KAAK,CAAE,KAAK,AACd,CAAC,AACD,kBAAI,CAAC,OAAO,cAAC,CAAC,AACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,aAAa,CAC9B,WAAW,CAAE,MAAM,AACrB,CAAC\"}"
 };
 
 const Gagiyoleb = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
@@ -1346,25 +1352,15 @@ const Gagiyoleb = create_ssr_component(($$result, $$props, $$bindings, $$slots) 
 		}
 	}
 
-	 {
-		{
-			if (DeviceDetectorService.isBrowser) {
-				console.log(destination);
-
-				googleService.getSuggestedPlaces(destination).then(res => {
-					console.log(res);
-				});
-			}
-		}
-	}
-
 	return `<div class="${"wrapper svelte-rnsfl4"}"><form class="${"svelte-rnsfl4"}"><div class="${"form-group"}"><label>${escape(fromUni ? "To" : "From")}</label>
-            <input type="${"text"}" class="${"form-control"}"${add_attribute("placeholder", fromUni ? "To" : "From", 0)}${add_attribute("value", destination, 1)}></div>
-        <div class="${"form-group"}"><label>Time</label>
-            <input type="${"time"}" class="${"form-control"}" placeholder="${"Time"}"${add_attribute("value", time, 1)}></div>
-        <div class="${"form-group"}"><label>Number of Seats</label>
-            <input type="${"number"}" class="${"form-control"}" placeholder="${"Number of Seats"}"${add_attribute("value", seats, 1)}></div>
-        <div class="${"action svelte-rnsfl4"}"><button type="${"button"}" class="${"btn btn-primary"}">Gagiyoleb</button></div></form></div>`;
+      <input type="${"search"}" class="${"form-control"}"${add_attribute("placeholder", fromUni ? "To" : "From", 0)}${add_attribute("value", destination, 1)}></div>
+    ${ ``}
+    <div class="${"form-group"}"><label>Time</label>
+      <input type="${"time"}" class="${"form-control"}" placeholder="${"Time"}"${add_attribute("value", time, 1)}></div>
+    <div class="${"form-group"}"><label>Number of Seats</label>
+      <input type="${"number"}" class="${"form-control"}" placeholder="${"Number of Seats"}"${add_attribute("value", seats, 1)}></div>
+    <div class="${"action svelte-rnsfl4"}"><button type="${"button"}" class="${"btn btn-primary"}">Gagiyoleb
+      </button></div></form></div>`;
 });
 
 /* src\App.svelte generated by Svelte v3.24.0 */
