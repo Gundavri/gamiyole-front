@@ -20,6 +20,12 @@
             authService.emailRegex.test(email);
     }
 
+    function onKeyup(event) {
+        if(event.keyCode === 13) {
+            onSubmit();
+        }
+    }
+
     async function onSubmit() {
         submitClicked = true;
         if(isValidInputs) {
@@ -58,7 +64,8 @@
     <form>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <input bind:value={email} type="email" class="form-control" 
+                id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" on:keyup="{onKeyup}">
             {#if email.length === 0 && submitClicked}
                 <span class="error text-danger">Email is required*</span> 
             {/if}
@@ -74,7 +81,8 @@
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input bind:value={password} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <input bind:value={password} type="password" class="form-control" 
+                id="exampleInputPassword1" placeholder="Password" on:keyup="{onKeyup}">
             {#if password.length === 0 && submitClicked}
                 <span class="error text-danger">Password is required*</span> 
             {/if}

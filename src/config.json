@@ -1,3 +1,4 @@
 {
-    "baseAPIUrl": "http://localhost:8082"
+    "baseAPIUrl": "http://localhost:8082",
+    "googleAPIUrl": "https://maps.googleapis.com/maps/api/"
 }
