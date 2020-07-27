@@ -7,6 +7,7 @@
   import Home from './routes/Home.svelte';
   import Gamiyole from './routes/Gamiyole.svelte';
   import Gagiyoleb from './routes/Gagiyoleb.svelte';
+  import MapApp from './routes/MapApp.svelte';
 
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";
@@ -19,4 +20,5 @@
     <Route path="/" component="{Home}" />
     <Route path="gamiyole" component="{Gamiyole}" />
     <Route path="gagiyoleb" component="{Gagiyoleb}" />
+    <Route path="map" component="{MapApp}" />
 </Router>

@@ -1,6 +1,7 @@
 <script>
   import { DeviceDetectorService } from "../services/deviceDetectorService.service";
   import { GoogleService } from "../services/google.service";
+  import { Link } from 'svelte-routing';
 
   const googleService = GoogleService.getInstance();
 
@@ -40,7 +41,6 @@
         Math.pow(lat - DeviceDetectorService.latUni, 2) +
           Math.pow(lng - DeviceDetectorService.lngUni, 2)
       );
-      console.log(distanceFromCenter);
 
       if (distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {
         fromUni = true;
@@ -54,8 +54,6 @@
     console.log("submit");
   }
 
-  function onKeyup(event) {}
-
   function getAutoCompletedData() {
     if (DeviceDetectorService.isBrowser) {
       googleService.getSuggestedPlaces(destination).then(res => {
@@ -63,8 +61,6 @@
       });
     }
   }
-
-  function choosePrediction() {}
 </script>
 
 <style type="scss">
@@ -116,6 +112,11 @@
         {/each}
       </div>
     {/if}
+    <div>
+      {#if destination === ''}
+        <Link to="/map">Pic on Map</Link>
+      {/if}
+    </div>
     <div class="form-group">
       <label>Time</label>
       <input

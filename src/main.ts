@@ -5,3 +5,4 @@ new App({
   target: document.getElementById("app"),
   hydrate: true
 });
+
