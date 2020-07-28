@@ -27,12 +27,30 @@
   }
 
   $: {
-    console.log(seats);
+    if(seats <= 1) {
+      seats = 1;
+    }
   }
 
   onMount(async () => {
     authService.validateTokenAndNavigate().then(res => {
     });
+
+    const url = new URL(location.href);
+    const timeFromQuery = url.searchParams.get('time');
+    const seatsFromQuery = url.searchParams.get('seats');
+    const destinationFromQuery = url.searchParams.get('destination');
+    console.log('destinationFromQuery', destinationFromQuery);
+
+    if(destinationFromQuery) {
+      destination = destinationFromQuery;
+    }
+    if(timeFromQuery) {
+      time = timeFromQuery;
+    }
+    if(seatsFromQuery) {
+      seats = seatsFromQuery;
+    }
   });
 
 
@@ -123,9 +141,9 @@
     {/if}
     <div>
       {#if destination === ''}
-        <Link to="/map">Pic on Map</Link>
+        <Link to="/map?time={time}&seats={seats}">Pick on Map</Link>
       {:else}
-        <Link to="/map?destination={destination}">Show on Map</Link>
+        <Link to="/map?destination={destination}&time={time}&seats={seats}">Show on Map</Link>
       {/if}
     </div>
     <div class="form-group">
