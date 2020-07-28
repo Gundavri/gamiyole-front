@@ -1,5 +1,5 @@
 <script>
-  import { DeviceDetectorService } from "./services/deviceDetectorService.service";
+  import { DeviceDetectorService } from "../services/deviceDetectorService.service";
   import { Link } from "svelte-routing";
 
   let container;

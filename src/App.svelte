@@ -1,5 +1,7 @@
 <script>
   import { Router, Route, Link } from "svelte-routing";
+  import { DeviceDetectorService } from "./services/deviceDetectorService.service";
+  import { GoogleService } from "./services/google.service"
 
   import Login from './routes/Login.svelte';
   import Register from './routes/Register.svelte';
@@ -8,6 +10,12 @@
   import Gamiyole from './routes/Gamiyole.svelte';
   import Gagiyoleb from './routes/Gagiyoleb.svelte';
   import MapApp from './routes/MapApp.svelte';
+  
+  if(DeviceDetectorService.isBrowser) {
+    window.initMap = function() {
+        GoogleService.getInstance().setMapLoaded(true);
+    }
+  }
 
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";

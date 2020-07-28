@@ -23,4 +23,10 @@ export class GoogleService {
         }
         return toRet;
     }
+
+    setMapLoaded(flag) {
+        this.mapLoaded = flag;
+    }
+
+
 }
