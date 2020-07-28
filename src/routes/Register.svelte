@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { Link } from "svelte-routing";
+    import { Link, navigate } from "svelte-routing";
     import { AuthService } from '../services/auth.service';
 
     let submitClicked = false;
@@ -21,6 +21,12 @@
             authService.emailRegex.test(email) &&
             (password1.length >= 6 && password1.length <= 64) &&
             password1 === password2;
+    }
+
+    function onKeyup(event) {
+        if(event.keyCode === 13){
+            onSubmit();
+        }
     }
 
     async function onSubmit() {
@@ -66,7 +72,8 @@
     <form>
         <div class="form-group">
             <label for="exampleInputEmail1">Name</label>
-            <input bind:value={name} type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name">
+            <input bind:value={name} type="text" class="form-control" 
+                id="exampleInputName" placeholder="Enter name" on:keyup="{onKeyup}">
             {#if name.length === 0 && submitClicked}
                 <span class="error text-danger">Name is required*</span> 
             {/if}
@@ -79,7 +86,8 @@
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Surname</label>
-            <input bind:value={surname} type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter surname">
+            <input bind:value={surname} type="text" class="form-control" 
+                id="exampleInputSurname" placeholder="Enter surname" on:keyup="{onKeyup}">
             {#if surname.length === 0 && submitClicked}
                 <span class="error text-danger">Surname is required*</span> 
             {/if}
@@ -92,7 +100,8 @@
         </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <input bind:value={email} type="email" class="form-control" 
+                id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" on:keyup="{onKeyup}">
             {#if email.length === 0 && submitClicked}
                 <span class="error text-danger">Email is required*</span> 
             {/if}
@@ -108,7 +117,8 @@
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input bind:value={password1} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <input bind:value={password1} type="password" class="form-control" 
+                id="exampleInputPassword1" placeholder="Password" on:keyup="{onKeyup}">
             {#if password1.length === 0 && submitClicked}
                 <span class="error text-danger">Password is required*</span> 
             {/if}
@@ -121,7 +131,8 @@
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Confirm Password</label>
-            <input bind:value={password2} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <input bind:value={password2} type="password" class="form-control" 
+                id="exampleInputPassword2" placeholder="Password" on:keyup="{onKeyup}">
             {#if password2.length === 0 && submitClicked}
                 <span class="error text-danger">Please confirm password*</span> 
             {/if}

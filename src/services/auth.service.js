@@ -13,6 +13,7 @@ export class AuthService {
     async validateTokenAndNavigate() {
         if(!this.getToken()) {
             navigate('/login');
+            console.log('araDzmao')
             return false;
         } else {
             const res = await this.validateToken();
