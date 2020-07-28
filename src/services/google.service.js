@@ -24,9 +24,8 @@ export class GoogleService {
         return toRet;
     }
 
-    setMapLoaded(flag) {
-        this.mapLoaded = flag;
+    async getGeometryForPlace(place) {
+        const res = await (await fetch(`${Config.baseAPIUrl}/find-place-from-text?place=${place}&token=${authService.getToken()}`)).json();
+        return res;
     }
-
-
 }

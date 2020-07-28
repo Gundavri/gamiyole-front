@@ -1,7 +1,10 @@
 <script>
   import { DeviceDetectorService } from "../services/deviceDetectorService.service";
   import { Link } from "svelte-routing";
+  import { GoogleService } from '../services/google.service';
+  import { onMount } from "svelte";
 
+  const googleService = GoogleService.getInstance();
   let container;
   let map;
   let zoom = 16;
@@ -13,9 +16,18 @@
   let endLocation;
   let marker;
 
-  import { onMount } from "svelte";
 
   onMount(async () => {
+    const url = new URL(location.href);
+    const destination = url.searchParams.get('destination');
+    
+    if(destination) {
+      const res = await googleService.getGeometryForPlace(destination);
+      if(res.candidates.length !== 0) {
+        center = res.candidates[0].geometry.location;
+      }
+    }
+
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
     map = new google.maps.Map(container, {
@@ -32,6 +44,7 @@
     });
     directionsRenderer.setMap(map);
   });
+
 </script>
 
 <style>

@@ -1,9 +1,12 @@
 <script>
+  import { onMount } from 'svelte';
   import { DeviceDetectorService } from "../services/deviceDetectorService.service";
   import { GoogleService } from "../services/google.service";
-  import { Link } from 'svelte-routing';
+  import { Link } from "svelte-routing";
+  import { AuthService } from "../services/auth.service";
 
   const googleService = GoogleService.getInstance();
+  const authService = AuthService.getInstance();
 
   const dateHours = new Date().getHours();
   const dateMinutes = new Date().getMinutes();
@@ -27,13 +30,19 @@
     console.log(seats);
   }
 
+  onMount(async () => {
+    authService.validateTokenAndNavigate().then(res => {
+    });
+  });
+
+
   if (DeviceDetectorService.isBrowser && window.navigator) {
     isAtUni();
   }
 
   function isAtUni() {
     let lat, lng;
-    navigator.geolocation.getCurrentPosition(pos => {
+    navigator.geolocation.getCurrentPosition((pos) => {
       lat = pos.coords.latitude;
       lng = pos.coords.longitude;
 
@@ -56,7 +65,7 @@
 
   function getAutoCompletedData() {
     if (DeviceDetectorService.isBrowser) {
-      googleService.getSuggestedPlaces(destination).then(res => {
+      googleService.getSuggestedPlaces(destination).then((res) => {
         predictions = res;
       });
     }
@@ -92,7 +101,7 @@
         type="search"
         class="form-control"
         placeholder={fromUni ? 'To' : 'From'}
-        on:input={res => {
+        on:input={(res) => {
           getAutoCompletedData();
           clicked = false;
         }} />
@@ -105,7 +114,7 @@
             class="form-control"
             value="{prediction}/"
             readonly
-            on:click={res => {
+            on:click={(res) => {
               destination = prediction;
               clicked = true;
             }} />
@@ -115,6 +124,8 @@
     <div>
       {#if destination === ''}
         <Link to="/map">Pic on Map</Link>
+      {:else}
+        <Link to="/map?destination={destination}">Show on Map</Link>
       {/if}
     </div>
     <div class="form-group">

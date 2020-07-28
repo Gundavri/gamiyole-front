@@ -11,12 +11,6 @@
   import Gagiyoleb from './routes/Gagiyoleb.svelte';
   import MapApp from './routes/MapApp.svelte';
   
-  if(DeviceDetectorService.isBrowser) {
-    window.initMap = function() {
-        GoogleService.getInstance().setMapLoaded(true);
-    }
-  }
-
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";
 </script>
