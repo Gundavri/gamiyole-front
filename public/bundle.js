@@ -5176,7 +5176,7 @@
     	return child_ctx;
     }
 
-    // (111:4) {#if destination !== '' && !clicked}
+    // (123:4) {#if destination !== '' && !clicked}
     function create_if_block_1$3(ctx) {
     	let div;
     	let each_value = /*predictions*/ ctx[4];
@@ -5209,7 +5209,7 @@
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(div, file$5, 111, 6, 2504);
+    			add_location(div, file$5, 123, 6, 2980);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -5253,14 +5253,14 @@
     		block,
     		id: create_if_block_1$3.name,
     		type: "if",
-    		source: "(111:4) {#if destination !== '' && !clicked}",
+    		source: "(123:4) {#if destination !== '' && !clicked}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (113:8) {#each predictions as prediction}
+    // (125:8) {#each predictions as prediction}
     function create_each_block(ctx) {
     	let input;
     	let input_value_value;
@@ -5291,7 +5291,7 @@
     			attr_dev(input, "class", "form-control");
     			input.value = input_value_value = "" + (/*prediction*/ ctx[18] + "/");
     			input.readOnly = true;
-    			add_location(input, file$5, 113, 10, 2564);
+    			add_location(input, file$5, 125, 10, 3040);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -5319,21 +5319,21 @@
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(113:8) {#each predictions as prediction}",
+    		source: "(125:8) {#each predictions as prediction}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (129:8) {:else}
+    // (141:8) {:else}
     function create_else_block$2(ctx) {
     	let link;
     	let current;
 
     	link = new Link({
     			props: {
-    				to: "/map?destination=" + /*destination*/ ctx[1],
+    				to: "/map?destination=" + /*destination*/ ctx[1] + "&startTime=" + /*startTime*/ ctx[2] + "&endTime=" + /*endTime*/ ctx[3],
     				$$slots: { default: [create_default_slot_1$1] },
     				$$scope: { ctx }
     			},
@@ -5353,7 +5353,7 @@
     		},
     		p: function update(ctx, dirty) {
     			const link_changes = {};
-    			if (dirty & /*destination*/ 2) link_changes.to = "/map?destination=" + /*destination*/ ctx[1];
+    			if (dirty & /*destination, startTime, endTime*/ 14) link_changes.to = "/map?destination=" + /*destination*/ ctx[1] + "&startTime=" + /*startTime*/ ctx[2] + "&endTime=" + /*endTime*/ ctx[3];
 
     			if (dirty & /*$$scope*/ 2097152) {
     				link_changes.$$scope = { dirty, ctx };
@@ -5379,21 +5379,21 @@
     		block,
     		id: create_else_block$2.name,
     		type: "else",
-    		source: "(129:8) {:else}",
+    		source: "(141:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (127:6) {#if destination === ''}
+    // (139:6) {#if destination === ''}
     function create_if_block$4(ctx) {
     	let link;
     	let current;
 
     	link = new Link({
     			props: {
-    				to: "/map",
+    				to: "/map?startTime=" + /*startTime*/ ctx[2] + "&endTime=" + /*endTime*/ ctx[3],
     				$$slots: { default: [create_default_slot$3] },
     				$$scope: { ctx }
     			},
@@ -5413,6 +5413,7 @@
     		},
     		p: function update(ctx, dirty) {
     			const link_changes = {};
+    			if (dirty & /*startTime, endTime*/ 12) link_changes.to = "/map?startTime=" + /*startTime*/ ctx[2] + "&endTime=" + /*endTime*/ ctx[3];
 
     			if (dirty & /*$$scope*/ 2097152) {
     				link_changes.$$scope = { dirty, ctx };
@@ -5438,14 +5439,14 @@
     		block,
     		id: create_if_block$4.name,
     		type: "if",
-    		source: "(127:6) {#if destination === ''}",
+    		source: "(139:6) {#if destination === ''}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (130:8) <Link to="/map?destination={destination}">
+    // (142:8) <Link to="/map?destination={destination}&startTime={startTime}&endTime={endTime}">
     function create_default_slot_1$1(ctx) {
     	let t;
 
@@ -5468,23 +5469,23 @@
     		block,
     		id: create_default_slot_1$1.name,
     		type: "slot",
-    		source: "(130:8) <Link to=\\\"/map?destination={destination}\\\">",
+    		source: "(142:8) <Link to=\\\"/map?destination={destination}&startTime={startTime}&endTime={endTime}\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (128:8) <Link to="/map">
+    // (140:8) <Link to="/map?startTime={startTime}&endTime={endTime}">
     function create_default_slot$3(ctx) {
     	let t;
 
     	const block = {
     		c: function create() {
-    			t = text("Pic on Map");
+    			t = text("Pick on Map");
     		},
     		l: function claim(nodes) {
-    			t = claim_text(nodes, "Pic on Map");
+    			t = claim_text(nodes, "Pick on Map");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -5498,7 +5499,7 @@
     		block,
     		id: create_default_slot$3.name,
     		type: "slot",
-    		source: "(128:8) <Link to=\\\"/map\\\">",
+    		source: "(140:8) <Link to=\\\"/map?startTime={startTime}&endTime={endTime}\\\">",
     		ctx
     	});
 
@@ -5655,37 +5656,37 @@
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(label0, file$5, 99, 6, 2148);
+    			add_location(label0, file$5, 111, 6, 2624);
     			attr_dev(input0, "type", "search");
     			attr_dev(input0, "class", "form-control");
     			attr_dev(input0, "placeholder", input0_placeholder_value = /*fromUni*/ ctx[0] ? "To" : "From");
-    			add_location(input0, file$5, 100, 6, 2196);
+    			add_location(input0, file$5, 112, 6, 2672);
     			attr_dev(div0, "class", "form-group");
-    			add_location(div0, file$5, 98, 4, 2116);
-    			add_location(div1, file$5, 125, 4, 2857);
-    			add_location(label1, file$5, 133, 6, 3087);
+    			add_location(div0, file$5, 110, 4, 2592);
+    			add_location(div1, file$5, 137, 4, 3333);
+    			add_location(label1, file$5, 145, 6, 3644);
     			attr_dev(input1, "type", "time");
     			attr_dev(input1, "class", "form-control");
     			attr_dev(input1, "placeholder", "From");
-    			add_location(input1, file$5, 134, 6, 3114);
+    			add_location(input1, file$5, 146, 6, 3671);
     			attr_dev(div2, "class", "form-group");
-    			add_location(div2, file$5, 132, 4, 3055);
-    			add_location(label2, file$5, 141, 6, 3284);
+    			add_location(div2, file$5, 144, 4, 3612);
+    			add_location(label2, file$5, 153, 6, 3841);
     			attr_dev(input2, "type", "time");
     			attr_dev(input2, "class", "form-control");
     			attr_dev(input2, "placeholder", "To");
-    			add_location(input2, file$5, 142, 6, 3309);
+    			add_location(input2, file$5, 154, 6, 3866);
     			attr_dev(div3, "class", "form-group");
-    			add_location(div3, file$5, 140, 4, 3252);
+    			add_location(div3, file$5, 152, 4, 3809);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-primary");
-    			add_location(button, file$5, 149, 6, 3471);
+    			add_location(button, file$5, 161, 6, 4028);
     			attr_dev(div4, "class", "action svelte-rnsfl4");
-    			add_location(div4, file$5, 148, 4, 3443);
+    			add_location(div4, file$5, 160, 4, 4000);
     			attr_dev(form, "class", "svelte-rnsfl4");
-    			add_location(form, file$5, 97, 2, 2104);
+    			add_location(form, file$5, 109, 2, 2580);
     			attr_dev(div5, "class", "wrapper svelte-rnsfl4");
-    			add_location(div5, file$5, 96, 0, 2079);
+    			add_location(div5, file$5, 108, 0, 2555);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div5, anchor);
@@ -5841,6 +5842,24 @@
     		authService.validateTokenAndNavigate().then(res => {
     			
     		});
+
+    		const url = new URL(location.href);
+    		const startTimeFromQuery = url.searchParams.get("startTime");
+    		const endTimeFromQuery = url.searchParams.get("endTime");
+    		const destinationFromQuery = url.searchParams.get("destination");
+    		console.log("destinationFromQuery", destinationFromQuery);
+
+    		if (destinationFromQuery) {
+    			$$invalidate(1, destination = destinationFromQuery);
+    		}
+
+    		if (startTimeFromQuery) {
+    			$$invalidate(2, startTime = startTimeFromQuery);
+    		}
+
+    		if (endTimeFromQuery) {
+    			$$invalidate(3, endTime = endTimeFromQuery);
+    		}
     	});
 
     	if (DeviceDetectorService.isBrowser && window.navigator) {
@@ -5930,7 +5949,7 @@
     	$$self.$inject_state = $$props => {
     		if ("fromUni" in $$props) $$invalidate(0, fromUni = $$props.fromUni);
     		if ("destination" in $$props) $$invalidate(1, destination = $$props.destination);
-    		if ("seats" in $$props) $$invalidate(16, seats = $$props.seats);
+    		if ("seats" in $$props) seats = $$props.seats;
     		if ("startTime" in $$props) $$invalidate(2, startTime = $$props.startTime);
     		if ("endTime" in $$props) $$invalidate(3, endTime = $$props.endTime);
     		if ("predictions" in $$props) $$invalidate(4, predictions = $$props.predictions);
@@ -5948,10 +5967,6 @@
     			}
     		}
     	};
-
-    	 {
-    		console.log(seats);
-    	}
 
     	return [
     		fromUni,
@@ -5994,7 +6009,7 @@
     	return child_ctx;
     }
 
-    // (106:4) {#if destination !== '' && !clicked}
+    // (124:4) {#if destination !== '' && !clicked}
     function create_if_block_1$4(ctx) {
     	let div;
     	let each_value = /*predictions*/ ctx[4];
@@ -6027,7 +6042,7 @@
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(div, file$6, 106, 6, 2362);
+    			add_location(div, file$6, 124, 6, 2855);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -6071,14 +6086,14 @@
     		block,
     		id: create_if_block_1$4.name,
     		type: "if",
-    		source: "(106:4) {#if destination !== '' && !clicked}",
+    		source: "(124:4) {#if destination !== '' && !clicked}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (108:8) {#each predictions as prediction}
+    // (126:8) {#each predictions as prediction}
     function create_each_block$1(ctx) {
     	let input;
     	let input_value_value;
@@ -6109,7 +6124,7 @@
     			attr_dev(input, "class", "form-control");
     			input.value = input_value_value = "" + (/*prediction*/ ctx[17] + "/");
     			input.readOnly = true;
-    			add_location(input, file$6, 108, 10, 2422);
+    			add_location(input, file$6, 126, 10, 2915);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -6137,21 +6152,21 @@
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(108:8) {#each predictions as prediction}",
+    		source: "(126:8) {#each predictions as prediction}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (124:6) {:else}
+    // (142:6) {:else}
     function create_else_block$3(ctx) {
     	let link;
     	let current;
 
     	link = new Link({
     			props: {
-    				to: "/map?destination=" + /*destination*/ ctx[1],
+    				to: "/map?destination=" + /*destination*/ ctx[1] + "&time=" + /*time*/ ctx[3] + "&seats=" + /*seats*/ ctx[2],
     				$$slots: { default: [create_default_slot_1$2] },
     				$$scope: { ctx }
     			},
@@ -6171,7 +6186,7 @@
     		},
     		p: function update(ctx, dirty) {
     			const link_changes = {};
-    			if (dirty & /*destination*/ 2) link_changes.to = "/map?destination=" + /*destination*/ ctx[1];
+    			if (dirty & /*destination, time, seats*/ 14) link_changes.to = "/map?destination=" + /*destination*/ ctx[1] + "&time=" + /*time*/ ctx[3] + "&seats=" + /*seats*/ ctx[2];
 
     			if (dirty & /*$$scope*/ 1048576) {
     				link_changes.$$scope = { dirty, ctx };
@@ -6197,21 +6212,21 @@
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(124:6) {:else}",
+    		source: "(142:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (122:6) {#if destination === ''}
+    // (140:6) {#if destination === ''}
     function create_if_block$5(ctx) {
     	let link;
     	let current;
 
     	link = new Link({
     			props: {
-    				to: "/map",
+    				to: "/map?time=" + /*time*/ ctx[3] + "&seats=" + /*seats*/ ctx[2],
     				$$slots: { default: [create_default_slot$4] },
     				$$scope: { ctx }
     			},
@@ -6231,6 +6246,7 @@
     		},
     		p: function update(ctx, dirty) {
     			const link_changes = {};
+    			if (dirty & /*time, seats*/ 12) link_changes.to = "/map?time=" + /*time*/ ctx[3] + "&seats=" + /*seats*/ ctx[2];
 
     			if (dirty & /*$$scope*/ 1048576) {
     				link_changes.$$scope = { dirty, ctx };
@@ -6256,14 +6272,14 @@
     		block,
     		id: create_if_block$5.name,
     		type: "if",
-    		source: "(122:6) {#if destination === ''}",
+    		source: "(140:6) {#if destination === ''}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (125:8) <Link to="/map?destination={destination}">
+    // (143:8) <Link to="/map?destination={destination}&time={time}&seats={seats}">
     function create_default_slot_1$2(ctx) {
     	let t;
 
@@ -6286,23 +6302,23 @@
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(125:8) <Link to=\\\"/map?destination={destination}\\\">",
+    		source: "(143:8) <Link to=\\\"/map?destination={destination}&time={time}&seats={seats}\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (123:8) <Link to="/map">
+    // (141:8) <Link to="/map?time={time}&seats={seats}">
     function create_default_slot$4(ctx) {
     	let t;
 
     	const block = {
     		c: function create() {
-    			t = text("Pic on Map");
+    			t = text("Pick on Map");
     		},
     		l: function claim(nodes) {
-    			t = claim_text(nodes, "Pic on Map");
+    			t = claim_text(nodes, "Pick on Map");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -6316,7 +6332,7 @@
     		block,
     		id: create_default_slot$4.name,
     		type: "slot",
-    		source: "(123:8) <Link to=\\\"/map\\\">",
+    		source: "(141:8) <Link to=\\\"/map?time={time}&seats={seats}\\\">",
     		ctx
     	});
 
@@ -6473,37 +6489,37 @@
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(label0, file$6, 94, 6, 2004);
+    			add_location(label0, file$6, 112, 6, 2497);
     			attr_dev(input0, "type", "search");
     			attr_dev(input0, "class", "form-control");
     			attr_dev(input0, "placeholder", input0_placeholder_value = /*fromUni*/ ctx[0] ? "To" : "From");
-    			add_location(input0, file$6, 95, 6, 2052);
+    			add_location(input0, file$6, 113, 6, 2545);
     			attr_dev(div0, "class", "form-group");
-    			add_location(div0, file$6, 93, 4, 1972);
-    			add_location(div1, file$6, 120, 4, 2717);
-    			add_location(label1, file$6, 128, 6, 2945);
+    			add_location(div0, file$6, 111, 4, 2465);
+    			add_location(div1, file$6, 138, 4, 3210);
+    			add_location(label1, file$6, 146, 6, 3491);
     			attr_dev(input1, "type", "time");
     			attr_dev(input1, "class", "form-control");
     			attr_dev(input1, "placeholder", "Time");
-    			add_location(input1, file$6, 129, 6, 2972);
+    			add_location(input1, file$6, 147, 6, 3518);
     			attr_dev(div2, "class", "form-group");
-    			add_location(div2, file$6, 127, 4, 2913);
-    			add_location(label2, file$6, 136, 6, 3137);
+    			add_location(div2, file$6, 145, 4, 3459);
+    			add_location(label2, file$6, 154, 6, 3683);
     			attr_dev(input2, "type", "number");
     			attr_dev(input2, "class", "form-control");
     			attr_dev(input2, "placeholder", "Number of Seats");
-    			add_location(input2, file$6, 137, 6, 3175);
+    			add_location(input2, file$6, 155, 6, 3721);
     			attr_dev(div3, "class", "form-group");
-    			add_location(div3, file$6, 135, 4, 3105);
+    			add_location(div3, file$6, 153, 4, 3651);
     			attr_dev(button, "type", "button");
     			attr_dev(button, "class", "btn btn-primary");
-    			add_location(button, file$6, 144, 6, 3350);
+    			add_location(button, file$6, 162, 6, 3896);
     			attr_dev(div4, "class", "action svelte-rnsfl4");
-    			add_location(div4, file$6, 143, 4, 3322);
+    			add_location(div4, file$6, 161, 4, 3868);
     			attr_dev(form, "class", "svelte-rnsfl4");
-    			add_location(form, file$6, 92, 2, 1960);
+    			add_location(form, file$6, 110, 2, 2453);
     			attr_dev(div5, "class", "wrapper svelte-rnsfl4");
-    			add_location(div5, file$6, 91, 0, 1935);
+    			add_location(div5, file$6, 109, 0, 2428);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div5, anchor);
@@ -6658,6 +6674,24 @@
     		authService.validateTokenAndNavigate().then(res => {
     			
     		});
+
+    		const url = new URL(location.href);
+    		const timeFromQuery = url.searchParams.get("time");
+    		const seatsFromQuery = url.searchParams.get("seats");
+    		const destinationFromQuery = url.searchParams.get("destination");
+    		console.log("destinationFromQuery", destinationFromQuery);
+
+    		if (destinationFromQuery) {
+    			$$invalidate(1, destination = destinationFromQuery);
+    		}
+
+    		if (timeFromQuery) {
+    			$$invalidate(3, time = timeFromQuery);
+    		}
+
+    		if (seatsFromQuery) {
+    			$$invalidate(2, seats = seatsFromQuery);
+    		}
     	});
 
     	if (DeviceDetectorService.isBrowser && window.navigator) {
@@ -6765,7 +6799,9 @@
 
     		if ($$self.$$.dirty & /*seats*/ 4) {
     			 {
-    				console.log(seats);
+    				if (seats <= 1) {
+    					$$invalidate(2, seats = 1);
+    				}
     			}
     		}
     	};
@@ -6805,122 +6841,56 @@
     const { console: console_1$2 } = globals;
     const file$7 = "src\\components\\Map.svelte";
 
-    // (57:0) <Link to='/'>
-    function create_default_slot$5(ctx) {
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			t = text("Go back");
-    		},
-    		l: function claim(nodes) {
-    			t = claim_text(nodes, "Go back");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, t, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(t);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot$5.name,
-    		type: "slot",
-    		source: "(57:0) <Link to='/'>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
     function create_fragment$9(ctx) {
-    	let link;
-    	let t0;
     	let div;
-    	let t1;
+    	let t0;
     	let button;
-    	let t2;
-    	let current;
+    	let t1;
     	let mounted;
     	let dispose;
 
-    	link = new Link({
-    			props: {
-    				to: "/",
-    				$$slots: { default: [create_default_slot$5] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
     	const block = {
     		c: function create() {
-    			create_component(link.$$.fragment);
-    			t0 = space();
     			div = element("div");
-    			t1 = space();
+    			t0 = space();
     			button = element("button");
-    			t2 = text("Submit");
+    			t1 = text("Submit");
     			this.h();
     		},
     		l: function claim(nodes) {
-    			claim_component(link.$$.fragment, nodes);
-    			t0 = claim_space(nodes);
     			div = claim_element(nodes, "DIV", { class: true });
     			children(div).forEach(detach_dev);
-    			t1 = claim_space(nodes);
+    			t0 = claim_space(nodes);
     			button = claim_element(nodes, "BUTTON", {});
     			var button_nodes = children(button);
-    			t2 = claim_text(button_nodes, "Submit");
+    			t1 = claim_text(button_nodes, "Submit");
     			button_nodes.forEach(detach_dev);
     			this.h();
     		},
     		h: function hydrate() {
     			attr_dev(div, "class", "full-screen svelte-17pn0o7");
-    			add_location(div, file$7, 57, 0, 1430);
-    			add_location(button, file$7, 58, 0, 1481);
+    			add_location(div, file$7, 96, 0, 2672);
+    			add_location(button, file$7, 97, 0, 2723);
     		},
     		m: function mount(target, anchor) {
-    			mount_component(link, target, anchor);
-    			insert_dev(target, t0, anchor);
     			insert_dev(target, div, anchor);
     			/*div_binding*/ ctx[2](div);
-    			insert_dev(target, t1, anchor);
+    			insert_dev(target, t0, anchor);
     			insert_dev(target, button, anchor);
-    			append_dev(button, t2);
-    			current = true;
+    			append_dev(button, t1);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler*/ ctx[3], false, false, false);
+    				dispose = listen_dev(button, "click", /*onSubmit*/ ctx[1], false, false, false);
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			const link_changes = {};
-
-    			if (dirty & /*$$scope*/ 8192) {
-    				link_changes.$$scope = { dirty, ctx };
-    			}
-
-    			link.$set(link_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(link.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(link.$$.fragment, local);
-    			current = false;
-    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
     		d: function destroy(detaching) {
-    			destroy_component(link, detaching);
-    			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(div);
     			/*div_binding*/ ctx[2](null);
-    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(button);
     			mounted = false;
     			dispose();
@@ -6951,6 +6921,7 @@
 
     	let directionsService;
     	let directionsRenderer;
+    	let geoCoder;
     	let count = 0;
     	let startLocation;
     	let endLocation;
@@ -6968,10 +6939,12 @@
     			}
     		}
 
+    		geoCoder = new google.maps.Geocoder();
     		directionsService = new google.maps.DirectionsService();
     		directionsRenderer = new google.maps.DirectionsRenderer();
     		map = new google.maps.Map(container, { zoom, center });
-    		$$invalidate(1, marker = new google.maps.Marker({ map, position: center, draggable: true }));
+    		marker = new google.maps.Marker({ map, position: center, draggable: true });
+    		window.marker = marker;
 
     		map.addListener("click", function (mapsMouseEvent) {
     			marker.setPosition(mapsMouseEvent.latLng);
@@ -6979,6 +6952,45 @@
 
     		directionsRenderer.setMap(map);
     	});
+
+    	function onSubmit() {
+    		const url = new URL(location.href);
+    		const startTime = url.searchParams.get("startTime");
+    		const endTime = url.searchParams.get("endTime");
+    		const time = url.searchParams.get("time");
+    		const seats = url.searchParams.get("seats");
+    		let destination;
+
+    		geoCoder.geocode(
+    			{
+    				location: {
+    					lat: marker.getPosition().lat(),
+    					lng: marker.getPosition().lng()
+    				}
+    			},
+    			(results, status) => {
+    				if (status === "OK") {
+    					if (results[0]) {
+    						console.log(results);
+    						destination = results[0].formatted_address;
+    						console.log(destination);
+
+    						if (startTime && endTime) {
+    							// Came from Gamiyole
+    							navigate(`/gamiyole?destination=${destination}&startTime=${startTime}&endTime=${endTime}`);
+    						} else {
+    							// Came from Gagiyole
+    							navigate(`/gagiyoleb?destination=${destination}&time=${time}&seats=${seats}`);
+    						}
+    					} else {
+    						window.alert("No results found");
+    					}
+    				} else {
+    					window.alert("Geocoder failed due to: " + status);
+    				}
+    			}
+    		);
+    	}
 
     	const writable_props = [];
 
@@ -6996,15 +7008,12 @@
     		});
     	}
 
-    	const click_handler = () => {
-    		console.log(marker.getPosition().lat(), marker.getPosition().lng());
-    	};
-
     	$$self.$capture_state = () => ({
     		DeviceDetectorService,
     		Link,
     		GoogleService,
     		onMount,
+    		navigate,
     		googleService,
     		container,
     		map,
@@ -7012,10 +7021,12 @@
     		center,
     		directionsService,
     		directionsRenderer,
+    		geoCoder,
     		count,
     		startLocation,
     		endLocation,
-    		marker
+    		marker,
+    		onSubmit
     	});
 
     	$$self.$inject_state = $$props => {
@@ -7025,17 +7036,18 @@
     		if ("center" in $$props) center = $$props.center;
     		if ("directionsService" in $$props) directionsService = $$props.directionsService;
     		if ("directionsRenderer" in $$props) directionsRenderer = $$props.directionsRenderer;
+    		if ("geoCoder" in $$props) geoCoder = $$props.geoCoder;
     		if ("count" in $$props) count = $$props.count;
     		if ("startLocation" in $$props) startLocation = $$props.startLocation;
     		if ("endLocation" in $$props) endLocation = $$props.endLocation;
-    		if ("marker" in $$props) $$invalidate(1, marker = $$props.marker);
+    		if ("marker" in $$props) marker = $$props.marker;
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [container, marker, div_binding, click_handler];
+    	return [container, onSubmit, div_binding];
     }
 
     class Map$1 extends SvelteComponentDev {
@@ -7231,7 +7243,7 @@
     /* src\App.svelte generated by Svelte v3.24.0 */
 
     // (18:0) <Router url="{url}">
-    function create_default_slot$6(ctx) {
+    function create_default_slot$5(ctx) {
     	let route0;
     	let t0;
     	let route1;
@@ -7370,7 +7382,7 @@
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$6.name,
+    		id: create_default_slot$5.name,
     		type: "slot",
     		source: "(18:0) <Router url=\\\"{url}\\\">",
     		ctx
@@ -7386,7 +7398,7 @@
     	router = new Router({
     			props: {
     				url: /*url*/ ctx[0],
-    				$$slots: { default: [create_default_slot$6] },
+    				$$slots: { default: [create_default_slot$5] },
     				$$scope: { ctx }
     			},
     			$$inline: true

@@ -138,6 +138,13 @@ const escaped = {
 function escape(html) {
     return String(html).replace(/["'&<>]/g, match => escaped[match]);
 }
+function each(items, fn) {
+    let str = '';
+    for (let i = 0; i < items.length; i += 1) {
+        str += fn(items[i], i);
+    }
+    return str;
+}
 const missing_component = {
     $$render: () => ''
 };
@@ -1347,7 +1354,7 @@ const Home = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
 
 const css$3 = {
 	code: ".wrapper.svelte-rnsfl4.svelte-rnsfl4{width:100%;height:100%;display:flex;justify-content:center;align-items:center}form.svelte-rnsfl4.svelte-rnsfl4{width:350px}form.svelte-rnsfl4 .action.svelte-rnsfl4{display:flex;justify-content:space-between;align-items:center}",
-	map: "{\"version\":3,\"file\":\"Gamiyole.svelte\",\"sources\":[\"Gamiyole.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { onMount } from 'svelte';\\r\\nimport { DeviceDetectorService } from \\\"../services/deviceDetectorService.service\\\";\\r\\nimport { GoogleService } from \\\"../services/google.service\\\";\\r\\nimport { Link } from 'svelte-routing';\\r\\nimport { AuthService } from \\\"../services/auth.service\\\";\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\nconst authService = AuthService.getInstance();\\r\\n\\r\\nconst dateHours = new Date().getHours();\\r\\nconst dateMinutes = new Date().getMinutes();\\r\\nlet fromUni,\\r\\n  destination = \\\"\\\",\\r\\n  seats = 1,\\r\\n  startTime =\\r\\n    (dateHours < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateHours +\\r\\n    \\\":\\\" +\\r\\n    (dateMinutes < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateMinutes,\\r\\n  endTime =\\r\\n    (dateHours < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateHours +\\r\\n    \\\":\\\" +\\r\\n    (dateMinutes < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateMinutes;\\r\\nlet predictions = [];\\r\\nlet clicked = false;\\r\\n\\r\\n$: {\\r\\n  console.log(startTime, endTime);\\r\\n}\\r\\n\\r\\n$: {\\r\\n  console.log(seats);\\r\\n}\\r\\n\\r\\nonMount(async () => {\\r\\n  authService.validateTokenAndNavigate().then(res => {\\r\\n  });\\r\\n});\\r\\n\\r\\nif (DeviceDetectorService.isBrowser && window.navigator) {\\r\\n  isAtUni();\\r\\n}\\r\\n\\r\\nfunction isAtUni() {\\r\\n  let lat, lng;\\r\\n  navigator.geolocation.getCurrentPosition(pos => {\\r\\n    lat = pos.coords.latitude;\\r\\n    lng = pos.coords.longitude;\\r\\n\\r\\n    const distanceFromCenter = Math.sqrt(\\r\\n      Math.pow(lat - DeviceDetectorService.latUni, 2) +\\r\\n        Math.pow(lng - DeviceDetectorService.lngUni, 2)\\r\\n    );\\r\\n\\r\\n    if (distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {\\r\\n      fromUni = true;\\r\\n    } else {\\r\\n      fromUni = false;\\r\\n    }\\r\\n  });\\r\\n}\\r\\n\\r\\nfunction onSubmit() {\\r\\n  console.log(\\\"submit\\\");\\r\\n}\\r\\n\\r\\nfunction getAutoCompletedData() {\\r\\n  if (DeviceDetectorService.isBrowser) {\\r\\n    googleService.getSuggestedPlaces(destination).then(res => {\\r\\n      predictions = res;\\r\\n    });\\r\\n  }\\r\\n}\\r\\n</script>\\r\\n\\r\\n<style type=\\\"scss\\\">.wrapper {\\n  width: 100%;\\n  height: 100%;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n}\\n\\nform {\\n  width: 350px;\\n}\\nform .action {\\n  display: flex;\\n  justify-content: space-between;\\n  align-items: center;\\n}</style>\\r\\n\\r\\n<div class=\\\"wrapper\\\">\\r\\n  <form>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>{fromUni ? 'To' : 'From'}</label>\\r\\n      <input\\r\\n        bind:value={destination}\\r\\n        type=\\\"search\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder={fromUni ? 'To' : 'From'}\\r\\n        on:input={res => {\\r\\n          getAutoCompletedData();\\r\\n          clicked = false;\\r\\n        }} />\\r\\n    </div>\\r\\n    {#if destination !== '' && !clicked}\\r\\n      <div>\\r\\n        {#each predictions as prediction}\\r\\n          <input\\r\\n            type=\\\"text\\\"\\r\\n            class=\\\"form-control\\\"\\r\\n            value=\\\"{prediction}/\\\"\\r\\n            readonly\\r\\n            on:click={res => {\\r\\n              destination = prediction;\\r\\n              clicked = true;\\r\\n            }} />\\r\\n        {/each}\\r\\n      </div>\\r\\n    {/if}\\r\\n    <div>\\r\\n      {#if destination === ''}\\r\\n        <Link to=\\\"/map\\\">Pic on Map</Link>\\r\\n        {:else}\\r\\n        <Link to=\\\"/map?destination={destination}\\\">Show on Map</Link>\\r\\n      {/if}\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>From</label>\\r\\n      <input\\r\\n        bind:value={startTime}\\r\\n        type=\\\"time\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"From\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>To</label>\\r\\n      <input\\r\\n        bind:value={endTime}\\r\\n        type=\\\"time\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"To\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"action\\\">\\r\\n      <button type=\\\"button\\\" class=\\\"btn btn-primary\\\" on:click={onSubmit}>\\r\\n        Gamiyole\\r\\n      </button>\\r\\n    </div>\\r\\n  </form>\\r\\n</div>\\r\\n\"],\"names\":[],\"mappings\":\"AA+EmB,QAAQ,4BAAC,CAAC,AAC3B,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,MAAM,CACvB,WAAW,CAAE,MAAM,AACrB,CAAC,AAED,IAAI,4BAAC,CAAC,AACJ,KAAK,CAAE,KAAK,AACd,CAAC,AACD,kBAAI,CAAC,OAAO,cAAC,CAAC,AACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,aAAa,CAC9B,WAAW,CAAE,MAAM,AACrB,CAAC\"}"
+	map: "{\"version\":3,\"file\":\"Gamiyole.svelte\",\"sources\":[\"Gamiyole.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { onMount } from 'svelte';\\r\\nimport { DeviceDetectorService } from \\\"../services/deviceDetectorService.service\\\";\\r\\nimport { GoogleService } from \\\"../services/google.service\\\";\\r\\nimport { Link } from 'svelte-routing';\\r\\nimport { AuthService } from \\\"../services/auth.service\\\";\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\nconst authService = AuthService.getInstance();\\r\\n\\r\\nconst dateHours = new Date().getHours();\\r\\nconst dateMinutes = new Date().getMinutes();\\r\\nlet fromUni,\\r\\n  destination = \\\"\\\",\\r\\n  seats = 1,\\r\\n  startTime =\\r\\n    (dateHours < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateHours +\\r\\n    \\\":\\\" +\\r\\n    (dateMinutes < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateMinutes,\\r\\n  endTime =\\r\\n    (dateHours < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateHours +\\r\\n    \\\":\\\" +\\r\\n    (dateMinutes < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateMinutes;\\r\\nlet predictions = [];\\r\\nlet clicked = false;\\r\\n\\r\\n$: {\\r\\n  console.log(startTime, endTime);\\r\\n}\\r\\n\\r\\nonMount(async () => {\\r\\n  authService.validateTokenAndNavigate().then(res => {\\r\\n  });\\r\\n\\r\\n  const url = new URL(location.href);\\r\\n  const startTimeFromQuery = url.searchParams.get('startTime');\\r\\n  const endTimeFromQuery = url.searchParams.get('endTime');\\r\\n  const destinationFromQuery = url.searchParams.get('destination');\\r\\n  console.log('destinationFromQuery', destinationFromQuery);\\r\\n\\r\\n  if(destinationFromQuery) {\\r\\n    destination = destinationFromQuery;\\r\\n  }\\r\\n  if(startTimeFromQuery) {\\r\\n    startTime = startTimeFromQuery;\\r\\n  }\\r\\n  if(endTimeFromQuery) {\\r\\n    endTime = endTimeFromQuery;\\r\\n  }\\r\\n});\\r\\n\\r\\nif (DeviceDetectorService.isBrowser && window.navigator) {\\r\\n  isAtUni();\\r\\n}\\r\\n\\r\\nfunction isAtUni() {\\r\\n  let lat, lng;\\r\\n  navigator.geolocation.getCurrentPosition(pos => {\\r\\n    lat = pos.coords.latitude;\\r\\n    lng = pos.coords.longitude;\\r\\n\\r\\n    const distanceFromCenter = Math.sqrt(\\r\\n      Math.pow(lat - DeviceDetectorService.latUni, 2) +\\r\\n        Math.pow(lng - DeviceDetectorService.lngUni, 2)\\r\\n    );\\r\\n\\r\\n    if (distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {\\r\\n      fromUni = true;\\r\\n    } else {\\r\\n      fromUni = false;\\r\\n    }\\r\\n  });\\r\\n}\\r\\n\\r\\nfunction onSubmit() {\\r\\n  console.log(\\\"submit\\\");\\r\\n}\\r\\n\\r\\nfunction getAutoCompletedData() {\\r\\n  if (DeviceDetectorService.isBrowser) {\\r\\n    googleService.getSuggestedPlaces(destination).then(res => {\\r\\n      predictions = res;\\r\\n    });\\r\\n  }\\r\\n}\\r\\n</script>\\r\\n\\r\\n<style type=\\\"scss\\\">.wrapper {\\n  width: 100%;\\n  height: 100%;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n}\\n\\nform {\\n  width: 350px;\\n}\\nform .action {\\n  display: flex;\\n  justify-content: space-between;\\n  align-items: center;\\n}</style>\\r\\n\\r\\n<div class=\\\"wrapper\\\">\\r\\n  <form>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>{fromUni ? 'To' : 'From'}</label>\\r\\n      <input\\r\\n        bind:value={destination}\\r\\n        type=\\\"search\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder={fromUni ? 'To' : 'From'}\\r\\n        on:input={res => {\\r\\n          getAutoCompletedData();\\r\\n          clicked = false;\\r\\n        }} />\\r\\n    </div>\\r\\n    {#if destination !== '' && !clicked}\\r\\n      <div>\\r\\n        {#each predictions as prediction}\\r\\n          <input\\r\\n            type=\\\"text\\\"\\r\\n            class=\\\"form-control\\\"\\r\\n            value=\\\"{prediction}/\\\"\\r\\n            readonly\\r\\n            on:click={res => {\\r\\n              destination = prediction;\\r\\n              clicked = true;\\r\\n            }} />\\r\\n        {/each}\\r\\n      </div>\\r\\n    {/if}\\r\\n    <div>\\r\\n      {#if destination === ''}\\r\\n        <Link to=\\\"/map?startTime={startTime}&endTime={endTime}\\\">Pick on Map</Link>\\r\\n        {:else}\\r\\n        <Link to=\\\"/map?destination={destination}&startTime={startTime}&endTime={endTime}\\\">Show on Map</Link>\\r\\n      {/if}\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>From</label>\\r\\n      <input\\r\\n        bind:value={startTime}\\r\\n        type=\\\"time\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"From\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>To</label>\\r\\n      <input\\r\\n        bind:value={endTime}\\r\\n        type=\\\"time\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"To\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"action\\\">\\r\\n      <button type=\\\"button\\\" class=\\\"btn btn-primary\\\" on:click={onSubmit}>\\r\\n        Gamiyole\\r\\n      </button>\\r\\n    </div>\\r\\n  </form>\\r\\n</div>\\r\\n\"],\"names\":[],\"mappings\":\"AA2FmB,QAAQ,4BAAC,CAAC,AAC3B,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,MAAM,CACvB,WAAW,CAAE,MAAM,AACrB,CAAC,AAED,IAAI,4BAAC,CAAC,AACJ,KAAK,CAAE,KAAK,AACd,CAAC,AACD,kBAAI,CAAC,OAAO,cAAC,CAAC,AACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,aAAa,CAC9B,WAAW,CAAE,MAAM,AACrB,CAAC\"}"
 };
 
 const Gamiyole = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
@@ -1358,14 +1365,34 @@ const Gamiyole = create_ssr_component(($$result, $$props, $$bindings, $$slots) =
 
 	let fromUni,
 		destination = "",
-		seats = 1,
 		startTime = (dateHours < 10 ? "0" : "") + dateHours + ":" + (dateMinutes < 10 ? "0" : "") + dateMinutes,
 		endTime = (dateHours < 10 ? "0" : "") + dateHours + ":" + (dateMinutes < 10 ? "0" : "") + dateMinutes;
+
+	let predictions = [];
+	let clicked = false;
 
 	onMount(async () => {
 		authService.validateTokenAndNavigate().then(res => {
 			
 		});
+
+		const url = new URL(location.href);
+		const startTimeFromQuery = url.searchParams.get("startTime");
+		const endTimeFromQuery = url.searchParams.get("endTime");
+		const destinationFromQuery = url.searchParams.get("destination");
+		console.log("destinationFromQuery", destinationFromQuery);
+
+		if (destinationFromQuery) {
+			destination = destinationFromQuery;
+		}
+
+		if (startTimeFromQuery) {
+			startTime = startTimeFromQuery;
+		}
+
+		if (endTimeFromQuery) {
+			endTime = endTimeFromQuery;
+		}
 	});
 
 	if (DeviceDetectorService.isBrowser && window.navigator) {
@@ -1396,17 +1423,28 @@ const Gamiyole = create_ssr_component(($$result, $$props, $$bindings, $$slots) =
 		}
 	}
 
-	 {
-		{
-			console.log(seats);
-		}
-	}
-
 	return `<div class="${"wrapper svelte-rnsfl4"}"><form class="${"svelte-rnsfl4"}"><div class="${"form-group"}"><label>${escape(fromUni ? "To" : "From")}</label>
       <input type="${"search"}" class="${"form-control"}"${add_attribute("placeholder", fromUni ? "To" : "From", 0)}${add_attribute("value", destination, 1)}></div>
-    ${ ``}
-    <div>${ `${validate_component(Link, "Link").$$render($$result, { to: "/map" }, {}, { default: () => `Pic on Map` })}`
-	}</div>
+    ${destination !== "" && !clicked
+	? `<div>${each(predictions, prediction => `<input type="${"text"}" class="${"form-control"}" value="${escape(prediction) + "/"}" readonly>`)}</div>`
+	: ``}
+    <div>${destination === ""
+	? `${validate_component(Link, "Link").$$render(
+			$$result,
+			{
+				to: "/map?startTime=" + startTime + "&endTime=" + endTime
+			},
+			{},
+			{ default: () => `Pick on Map` }
+		)}`
+	: `${validate_component(Link, "Link").$$render(
+			$$result,
+			{
+				to: "/map?destination=" + destination + "&startTime=" + startTime + "&endTime=" + endTime
+			},
+			{},
+			{ default: () => `Show on Map` }
+		)}`}</div>
     <div class="${"form-group"}"><label>From</label>
       <input type="${"time"}" class="${"form-control"}" placeholder="${"From"}"${add_attribute("value", startTime, 1)}></div>
     <div class="${"form-group"}"><label>To</label>
@@ -1419,7 +1457,7 @@ const Gamiyole = create_ssr_component(($$result, $$props, $$bindings, $$slots) =
 
 const css$4 = {
 	code: ".wrapper.svelte-rnsfl4.svelte-rnsfl4{width:100%;height:100%;display:flex;justify-content:center;align-items:center}form.svelte-rnsfl4.svelte-rnsfl4{width:350px}form.svelte-rnsfl4 .action.svelte-rnsfl4{display:flex;justify-content:space-between;align-items:center}",
-	map: "{\"version\":3,\"file\":\"Gagiyoleb.svelte\",\"sources\":[\"Gagiyoleb.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { onMount } from 'svelte';\\r\\nimport { DeviceDetectorService } from \\\"../services/deviceDetectorService.service\\\";\\r\\nimport { GoogleService } from \\\"../services/google.service\\\";\\r\\nimport { Link } from \\\"svelte-routing\\\";\\r\\nimport { AuthService } from \\\"../services/auth.service\\\";\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\nconst authService = AuthService.getInstance();\\r\\n\\r\\nconst dateHours = new Date().getHours();\\r\\nconst dateMinutes = new Date().getMinutes();\\r\\nlet fromUni,\\r\\n  destination = \\\"\\\",\\r\\n  seats = 1,\\r\\n  time =\\r\\n    (dateHours < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateHours +\\r\\n    \\\":\\\" +\\r\\n    (dateMinutes < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateMinutes;\\r\\nlet predictions = [];\\r\\nlet clicked = false;\\r\\n\\r\\n$: {\\r\\n  console.log(time);\\r\\n}\\r\\n\\r\\n$: {\\r\\n  console.log(seats);\\r\\n}\\r\\n\\r\\nonMount(async () => {\\r\\n  authService.validateTokenAndNavigate().then(res => {\\r\\n  });\\r\\n});\\r\\n\\r\\n\\r\\nif (DeviceDetectorService.isBrowser && window.navigator) {\\r\\n  isAtUni();\\r\\n}\\r\\n\\r\\nfunction isAtUni() {\\r\\n  let lat, lng;\\r\\n  navigator.geolocation.getCurrentPosition((pos) => {\\r\\n    lat = pos.coords.latitude;\\r\\n    lng = pos.coords.longitude;\\r\\n\\r\\n    const distanceFromCenter = Math.sqrt(\\r\\n      Math.pow(lat - DeviceDetectorService.latUni, 2) +\\r\\n        Math.pow(lng - DeviceDetectorService.lngUni, 2)\\r\\n    );\\r\\n\\r\\n    if (distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {\\r\\n      fromUni = true;\\r\\n    } else {\\r\\n      fromUni = false;\\r\\n    }\\r\\n  });\\r\\n}\\r\\n\\r\\nfunction onSubmit() {\\r\\n  console.log(\\\"submit\\\");\\r\\n}\\r\\n\\r\\nfunction getAutoCompletedData() {\\r\\n  if (DeviceDetectorService.isBrowser) {\\r\\n    googleService.getSuggestedPlaces(destination).then((res) => {\\r\\n      predictions = res;\\r\\n    });\\r\\n  }\\r\\n}\\r\\n</script>\\r\\n\\r\\n<style type=\\\"scss\\\">.wrapper {\\n  width: 100%;\\n  height: 100%;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n}\\n\\nform {\\n  width: 350px;\\n}\\nform .action {\\n  display: flex;\\n  justify-content: space-between;\\n  align-items: center;\\n}</style>\\r\\n\\r\\n<div class=\\\"wrapper\\\">\\r\\n  <form>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>{fromUni ? 'To' : 'From'}</label>\\r\\n      <input\\r\\n        bind:value={destination}\\r\\n        type=\\\"search\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder={fromUni ? 'To' : 'From'}\\r\\n        on:input={(res) => {\\r\\n          getAutoCompletedData();\\r\\n          clicked = false;\\r\\n        }} />\\r\\n    </div>\\r\\n    {#if destination !== '' && !clicked}\\r\\n      <div>\\r\\n        {#each predictions as prediction}\\r\\n          <input\\r\\n            type=\\\"text\\\"\\r\\n            class=\\\"form-control\\\"\\r\\n            value=\\\"{prediction}/\\\"\\r\\n            readonly\\r\\n            on:click={(res) => {\\r\\n              destination = prediction;\\r\\n              clicked = true;\\r\\n            }} />\\r\\n        {/each}\\r\\n      </div>\\r\\n    {/if}\\r\\n    <div>\\r\\n      {#if destination === ''}\\r\\n        <Link to=\\\"/map\\\">Pic on Map</Link>\\r\\n      {:else}\\r\\n        <Link to=\\\"/map?destination={destination}\\\">Show on Map</Link>\\r\\n      {/if}\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>Time</label>\\r\\n      <input\\r\\n        bind:value={time}\\r\\n        type=\\\"time\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"Time\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>Number of Seats</label>\\r\\n      <input\\r\\n        bind:value={seats}\\r\\n        type=\\\"number\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"Number of Seats\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"action\\\">\\r\\n      <button type=\\\"button\\\" class=\\\"btn btn-primary\\\" on:click={onSubmit}>\\r\\n        Gagiyoleb\\r\\n      </button>\\r\\n    </div>\\r\\n  </form>\\r\\n</div>\\r\\n\"],\"names\":[],\"mappings\":\"AA0EmB,QAAQ,4BAAC,CAAC,AAC3B,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,MAAM,CACvB,WAAW,CAAE,MAAM,AACrB,CAAC,AAED,IAAI,4BAAC,CAAC,AACJ,KAAK,CAAE,KAAK,AACd,CAAC,AACD,kBAAI,CAAC,OAAO,cAAC,CAAC,AACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,aAAa,CAC9B,WAAW,CAAE,MAAM,AACrB,CAAC\"}"
+	map: "{\"version\":3,\"file\":\"Gagiyoleb.svelte\",\"sources\":[\"Gagiyoleb.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { onMount } from 'svelte';\\r\\nimport { DeviceDetectorService } from \\\"../services/deviceDetectorService.service\\\";\\r\\nimport { GoogleService } from \\\"../services/google.service\\\";\\r\\nimport { Link } from \\\"svelte-routing\\\";\\r\\nimport { AuthService } from \\\"../services/auth.service\\\";\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\nconst authService = AuthService.getInstance();\\r\\n\\r\\nconst dateHours = new Date().getHours();\\r\\nconst dateMinutes = new Date().getMinutes();\\r\\nlet fromUni,\\r\\n  destination = \\\"\\\",\\r\\n  seats = 1,\\r\\n  time =\\r\\n    (dateHours < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateHours +\\r\\n    \\\":\\\" +\\r\\n    (dateMinutes < 10 ? \\\"0\\\" : \\\"\\\") +\\r\\n    dateMinutes;\\r\\nlet predictions = [];\\r\\nlet clicked = false;\\r\\n\\r\\n$: {\\r\\n  console.log(time);\\r\\n}\\r\\n\\r\\n$: {\\r\\n  if(seats <= 1) {\\r\\n    seats = 1;\\r\\n  }\\r\\n}\\r\\n\\r\\nonMount(async () => {\\r\\n  authService.validateTokenAndNavigate().then(res => {\\r\\n  });\\r\\n\\r\\n  const url = new URL(location.href);\\r\\n  const timeFromQuery = url.searchParams.get('time');\\r\\n  const seatsFromQuery = url.searchParams.get('seats');\\r\\n  const destinationFromQuery = url.searchParams.get('destination');\\r\\n  console.log('destinationFromQuery', destinationFromQuery);\\r\\n\\r\\n  if(destinationFromQuery) {\\r\\n    destination = destinationFromQuery;\\r\\n  }\\r\\n  if(timeFromQuery) {\\r\\n    time = timeFromQuery;\\r\\n  }\\r\\n  if(seatsFromQuery) {\\r\\n    seats = seatsFromQuery;\\r\\n  }\\r\\n});\\r\\n\\r\\n\\r\\nif (DeviceDetectorService.isBrowser && window.navigator) {\\r\\n  isAtUni();\\r\\n}\\r\\n\\r\\nfunction isAtUni() {\\r\\n  let lat, lng;\\r\\n  navigator.geolocation.getCurrentPosition((pos) => {\\r\\n    lat = pos.coords.latitude;\\r\\n    lng = pos.coords.longitude;\\r\\n\\r\\n    const distanceFromCenter = Math.sqrt(\\r\\n      Math.pow(lat - DeviceDetectorService.latUni, 2) +\\r\\n        Math.pow(lng - DeviceDetectorService.lngUni, 2)\\r\\n    );\\r\\n\\r\\n    if (distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {\\r\\n      fromUni = true;\\r\\n    } else {\\r\\n      fromUni = false;\\r\\n    }\\r\\n  });\\r\\n}\\r\\n\\r\\nfunction onSubmit() {\\r\\n  console.log(\\\"submit\\\");\\r\\n}\\r\\n\\r\\nfunction getAutoCompletedData() {\\r\\n  if (DeviceDetectorService.isBrowser) {\\r\\n    googleService.getSuggestedPlaces(destination).then((res) => {\\r\\n      predictions = res;\\r\\n    });\\r\\n  }\\r\\n}\\r\\n</script>\\r\\n\\r\\n<style type=\\\"scss\\\">.wrapper {\\n  width: 100%;\\n  height: 100%;\\n  display: flex;\\n  justify-content: center;\\n  align-items: center;\\n}\\n\\nform {\\n  width: 350px;\\n}\\nform .action {\\n  display: flex;\\n  justify-content: space-between;\\n  align-items: center;\\n}</style>\\r\\n\\r\\n<div class=\\\"wrapper\\\">\\r\\n  <form>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>{fromUni ? 'To' : 'From'}</label>\\r\\n      <input\\r\\n        bind:value={destination}\\r\\n        type=\\\"search\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder={fromUni ? 'To' : 'From'}\\r\\n        on:input={(res) => {\\r\\n          getAutoCompletedData();\\r\\n          clicked = false;\\r\\n        }} />\\r\\n    </div>\\r\\n    {#if destination !== '' && !clicked}\\r\\n      <div>\\r\\n        {#each predictions as prediction}\\r\\n          <input\\r\\n            type=\\\"text\\\"\\r\\n            class=\\\"form-control\\\"\\r\\n            value=\\\"{prediction}/\\\"\\r\\n            readonly\\r\\n            on:click={(res) => {\\r\\n              destination = prediction;\\r\\n              clicked = true;\\r\\n            }} />\\r\\n        {/each}\\r\\n      </div>\\r\\n    {/if}\\r\\n    <div>\\r\\n      {#if destination === ''}\\r\\n        <Link to=\\\"/map?time={time}&seats={seats}\\\">Pick on Map</Link>\\r\\n      {:else}\\r\\n        <Link to=\\\"/map?destination={destination}&time={time}&seats={seats}\\\">Show on Map</Link>\\r\\n      {/if}\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>Time</label>\\r\\n      <input\\r\\n        bind:value={time}\\r\\n        type=\\\"time\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"Time\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"form-group\\\">\\r\\n      <label>Number of Seats</label>\\r\\n      <input\\r\\n        bind:value={seats}\\r\\n        type=\\\"number\\\"\\r\\n        class=\\\"form-control\\\"\\r\\n        placeholder=\\\"Number of Seats\\\" />\\r\\n    </div>\\r\\n    <div class=\\\"action\\\">\\r\\n      <button type=\\\"button\\\" class=\\\"btn btn-primary\\\" on:click={onSubmit}>\\r\\n        Gagiyoleb\\r\\n      </button>\\r\\n    </div>\\r\\n  </form>\\r\\n</div>\\r\\n\"],\"names\":[],\"mappings\":\"AA4FmB,QAAQ,4BAAC,CAAC,AAC3B,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,CACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,MAAM,CACvB,WAAW,CAAE,MAAM,AACrB,CAAC,AAED,IAAI,4BAAC,CAAC,AACJ,KAAK,CAAE,KAAK,AACd,CAAC,AACD,kBAAI,CAAC,OAAO,cAAC,CAAC,AACZ,OAAO,CAAE,IAAI,CACb,eAAe,CAAE,aAAa,CAC9B,WAAW,CAAE,MAAM,AACrB,CAAC\"}"
 };
 
 const Gagiyoleb = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
@@ -1433,10 +1471,31 @@ const Gagiyoleb = create_ssr_component(($$result, $$props, $$bindings, $$slots) 
 		seats = 1,
 		time = (dateHours < 10 ? "0" : "") + dateHours + ":" + (dateMinutes < 10 ? "0" : "") + dateMinutes;
 
+	let predictions = [];
+	let clicked = false;
+
 	onMount(async () => {
 		authService.validateTokenAndNavigate().then(res => {
 			
 		});
+
+		const url = new URL(location.href);
+		const timeFromQuery = url.searchParams.get("time");
+		const seatsFromQuery = url.searchParams.get("seats");
+		const destinationFromQuery = url.searchParams.get("destination");
+		console.log("destinationFromQuery", destinationFromQuery);
+
+		if (destinationFromQuery) {
+			destination = destinationFromQuery;
+		}
+
+		if (timeFromQuery) {
+			time = timeFromQuery;
+		}
+
+		if (seatsFromQuery) {
+			seats = seatsFromQuery;
+		}
 	});
 
 	if (DeviceDetectorService.isBrowser && window.navigator) {
@@ -1469,15 +1528,34 @@ const Gagiyoleb = create_ssr_component(($$result, $$props, $$bindings, $$slots) 
 
 	 {
 		{
-			console.log(seats);
+			if (seats <= 1) {
+				seats = 1;
+			}
 		}
 	}
 
 	return `<div class="${"wrapper svelte-rnsfl4"}"><form class="${"svelte-rnsfl4"}"><div class="${"form-group"}"><label>${escape(fromUni ? "To" : "From")}</label>
       <input type="${"search"}" class="${"form-control"}"${add_attribute("placeholder", fromUni ? "To" : "From", 0)}${add_attribute("value", destination, 1)}></div>
-    ${ ``}
-    <div>${ `${validate_component(Link, "Link").$$render($$result, { to: "/map" }, {}, { default: () => `Pic on Map` })}`
-	}</div>
+    ${destination !== "" && !clicked
+	? `<div>${each(predictions, prediction => `<input type="${"text"}" class="${"form-control"}" value="${escape(prediction) + "/"}" readonly>`)}</div>`
+	: ``}
+    <div>${destination === ""
+	? `${validate_component(Link, "Link").$$render(
+			$$result,
+			{
+				to: "/map?time=" + time + "&seats=" + seats
+			},
+			{},
+			{ default: () => `Pick on Map` }
+		)}`
+	: `${validate_component(Link, "Link").$$render(
+			$$result,
+			{
+				to: "/map?destination=" + destination + "&time=" + time + "&seats=" + seats
+			},
+			{},
+			{ default: () => `Show on Map` }
+		)}`}</div>
     <div class="${"form-group"}"><label>Time</label>
       <input type="${"time"}" class="${"form-control"}" placeholder="${"Time"}"${add_attribute("value", time, 1)}></div>
     <div class="${"form-group"}"><label>Number of Seats</label>
@@ -1490,7 +1568,7 @@ const Gagiyoleb = create_ssr_component(($$result, $$props, $$bindings, $$slots) 
 
 const css$5 = {
 	code: ".full-screen.svelte-17pn0o7{width:100vw;height:90vh}",
-	map: "{\"version\":3,\"file\":\"Map.svelte\",\"sources\":[\"Map.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { DeviceDetectorService } from \\\"../services/deviceDetectorService.service\\\";\\r\\nimport { Link } from \\\"svelte-routing\\\";\\r\\nimport { GoogleService } from '../services/google.service';\\r\\nimport { onMount } from \\\"svelte\\\";\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\nlet container;\\r\\nlet map;\\r\\nlet zoom = 16;\\r\\nlet center = { lat: DeviceDetectorService.latUni, lng: DeviceDetectorService.lngUni };\\r\\nlet directionsService;\\r\\nlet directionsRenderer;\\r\\nlet count = 0;\\r\\nlet startLocation;\\r\\nlet endLocation;\\r\\nlet marker;\\r\\n\\r\\n\\r\\nonMount(async () => {\\r\\n  const url = new URL(location.href);\\r\\n  const destination = url.searchParams.get('destination');\\r\\n  \\r\\n  if(destination) {\\r\\n    const res = await googleService.getGeometryForPlace(destination);\\r\\n    if(res.candidates.length !== 0) {\\r\\n      center = res.candidates[0].geometry.location;\\r\\n    }\\r\\n  }\\r\\n\\r\\n  directionsService = new google.maps.DirectionsService();\\r\\n  directionsRenderer = new google.maps.DirectionsRenderer();\\r\\n  map = new google.maps.Map(container, {\\r\\n    zoom,\\r\\n    center\\r\\n  });\\r\\n  marker = new google.maps.Marker({\\r\\n      map: map,\\r\\n      position: center,\\r\\n      draggable: true\\r\\n  });\\r\\n  map.addListener(\\\"click\\\", function(mapsMouseEvent) {\\r\\n      marker.setPosition(mapsMouseEvent.latLng)\\r\\n  });\\r\\n  directionsRenderer.setMap(map);\\r\\n});\\r\\n\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n.full-screen {\\r\\n  width: 100vw;\\r\\n  height: 90vh;\\r\\n}\\r\\n</style>\\r\\n\\r\\n<Link to='/'>Go back</Link>\\r\\n<div class=\\\"full-screen\\\" bind:this={container} />\\r\\n<button on:click={()=>{\\r\\n    console.log(marker.getPosition().lat(), marker.getPosition().lng())\\r\\n}}>Submit</button>\\r\\n\"],\"names\":[],\"mappings\":\"AAkDA,YAAY,eAAC,CAAC,AACZ,KAAK,CAAE,KAAK,CACZ,MAAM,CAAE,IAAI,AACd,CAAC\"}"
+	map: "{\"version\":3,\"file\":\"Map.svelte\",\"sources\":[\"Map.svelte\"],\"sourcesContent\":[\"<script>\\r\\nimport { DeviceDetectorService } from \\\"../services/deviceDetectorService.service\\\";\\r\\nimport { Link } from \\\"svelte-routing\\\";\\r\\nimport { GoogleService } from '../services/google.service';\\r\\nimport { onMount } from \\\"svelte\\\";\\r\\nimport { navigate } from 'svelte-routing';\\r\\n\\r\\nconst googleService = GoogleService.getInstance();\\r\\nlet container;\\r\\nlet map;\\r\\nlet zoom = 16;\\r\\nlet center = { lat: DeviceDetectorService.latUni, lng: DeviceDetectorService.lngUni };\\r\\nlet directionsService;\\r\\nlet directionsRenderer;\\r\\nlet geoCoder;\\r\\nlet count = 0;\\r\\nlet startLocation;\\r\\nlet endLocation;\\r\\nlet marker;\\r\\n\\r\\n\\r\\nonMount(async () => {\\r\\n  const url = new URL(location.href);\\r\\n  const destination = url.searchParams.get('destination');\\r\\n  \\r\\n  if(destination) {\\r\\n    const res = await googleService.getGeometryForPlace(destination);\\r\\n    if(res.candidates.length !== 0) {\\r\\n      center = res.candidates[0].geometry.location;\\r\\n    }\\r\\n  }\\r\\n\\r\\n  geoCoder = new google.maps.Geocoder();\\r\\n  directionsService = new google.maps.DirectionsService();\\r\\n  directionsRenderer = new google.maps.DirectionsRenderer();\\r\\n  map = new google.maps.Map(container, {\\r\\n    zoom,\\r\\n    center\\r\\n  });\\r\\n  marker = new google.maps.Marker({\\r\\n      map: map,\\r\\n      position: center,\\r\\n      draggable: true\\r\\n  });\\r\\n  window.marker = marker;\\r\\n  map.addListener(\\\"click\\\", function(mapsMouseEvent) {\\r\\n      marker.setPosition(mapsMouseEvent.latLng)\\r\\n  });\\r\\n  directionsRenderer.setMap(map);\\r\\n});\\r\\n\\r\\nfunction onSubmit() {\\r\\n  const url = new URL(location.href);\\r\\n  const startTime = url.searchParams.get('startTime');\\r\\n  const endTime = url.searchParams.get('endTime');\\r\\n  const time = url.searchParams.get('time');\\r\\n  const seats = url.searchParams.get('seats');\\r\\n  let destination;\\r\\n\\r\\n  geoCoder.geocode({\\r\\n      location: {\\r\\n        lat: marker.getPosition().lat(),\\r\\n        lng: marker.getPosition().lng()\\r\\n      }\\r\\n    }, (results, status) => {\\r\\n      if (status === \\\"OK\\\") {\\r\\n        if (results[0]) {\\r\\n          console.log(results);\\r\\n          destination = results[0].formatted_address;\\r\\n          console.log(destination);\\r\\n          if(startTime && endTime) {\\r\\n            // Came from Gamiyole\\r\\n            navigate(`/gamiyole?destination=${destination}&startTime=${startTime}&endTime=${endTime}`);\\r\\n          } else {\\r\\n            // Came from Gagiyole\\r\\n            navigate(`/gagiyoleb?destination=${destination}&time=${time}&seats=${seats}`);\\r\\n          }\\r\\n        } else {\\r\\n          window.alert(\\\"No results found\\\");\\r\\n        }\\r\\n      } else {\\r\\n        window.alert(\\\"Geocoder failed due to: \\\" + status);\\r\\n      }\\r\\n  });\\r\\n\\r\\n}\\r\\n\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n.full-screen {\\r\\n  width: 100vw;\\r\\n  height: 90vh;\\r\\n}\\r\\n</style>\\r\\n\\r\\n<div class=\\\"full-screen\\\" bind:this={container} />\\r\\n<button on:click={onSubmit}>Submit</button>\\r\\n\"],\"names\":[],\"mappings\":\"AA0FA,YAAY,eAAC,CAAC,AACZ,KAAK,CAAE,KAAK,CACZ,MAAM,CAAE,IAAI,AACd,CAAC\"}"
 };
 
 let zoom = 16;
@@ -1507,6 +1585,7 @@ const Map$1 = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
 
 	let directionsService;
 	let directionsRenderer;
+	let geoCoder;
 	let marker;
 
 	onMount(async () => {
@@ -1521,10 +1600,12 @@ const Map$1 = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
 			}
 		}
 
+		geoCoder = new google.maps.Geocoder();
 		directionsService = new google.maps.DirectionsService();
 		directionsRenderer = new google.maps.DirectionsRenderer();
 		map = new google.maps.Map(container, { zoom, center });
 		marker = new google.maps.Marker({ map, position: center, draggable: true });
+		window.marker = marker;
 
 		map.addListener("click", function (mapsMouseEvent) {
 			marker.setPosition(mapsMouseEvent.latLng);
@@ -1535,8 +1616,7 @@ const Map$1 = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
 
 	$$result.css.add(css$5);
 
-	return `${validate_component(Link, "Link").$$render($$result, { to: "/" }, {}, { default: () => `Go back` })}
-<div class="${"full-screen svelte-17pn0o7"}"${add_attribute("this", container, 1)}></div>
+	return `<div class="${"full-screen svelte-17pn0o7"}"${add_attribute("this", container, 1)}></div>
 <button>Submit</button>`;
 });
 

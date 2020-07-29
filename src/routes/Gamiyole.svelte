@@ -32,13 +32,25 @@
     console.log(startTime, endTime);
   }
 
-  $: {
-    console.log(seats);
-  }
-
   onMount(async () => {
     authService.validateTokenAndNavigate().then(res => {
     });
+
+    const url = new URL(location.href);
+    const startTimeFromQuery = url.searchParams.get('startTime');
+    const endTimeFromQuery = url.searchParams.get('endTime');
+    const destinationFromQuery = url.searchParams.get('destination');
+    console.log('destinationFromQuery', destinationFromQuery);
+
+    if(destinationFromQuery) {
+      destination = destinationFromQuery;
+    }
+    if(startTimeFromQuery) {
+      startTime = startTimeFromQuery;
+    }
+    if(endTimeFromQuery) {
+      endTime = endTimeFromQuery;
+    }
   });
 
   if (DeviceDetectorService.isBrowser && window.navigator) {
@@ -128,9 +140,9 @@
     {/if}
     <div>
       {#if destination === ''}
-        <Link to="/map">Pic on Map</Link>
+        <Link to="/map?startTime={startTime}&endTime={endTime}">Pick on Map</Link>
         {:else}
-        <Link to="/map?destination={destination}">Show on Map</Link>
+        <Link to="/map?destination={destination}&startTime={startTime}&endTime={endTime}">Show on Map</Link>
       {/if}
     </div>
     <div class="form-group">
