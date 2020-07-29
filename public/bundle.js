@@ -195,6 +195,9 @@
     function set_input_value(input, value) {
         input.value = value == null ? '' : value;
     }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
+    }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
         e.initCustomEvent(type, false, false, detail);
@@ -4793,7 +4796,7 @@
     const { console: console_1 } = globals;
     const file$3 = "src/routes/Profile.svelte";
 
-    // (30:4) {:catch error}
+    // (65:8) {:catch error}
     function create_catch_block(ctx) {
     	let p;
     	let t;
@@ -4812,7 +4815,7 @@
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(p, file$3, 30, 8, 1458);
+    			add_location(p, file$3, 65, 12, 2836);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -4828,44 +4831,291 @@
     		block,
     		id: create_catch_block.name,
     		type: "catch",
-    		source: "(30:4) {:catch error}",
+    		source: "(65:8) {:catch error}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (28:4) {:then data}
+    // (31:8) {:then data}
     function create_then_block(ctx) {
-    	let p;
-    	let t_value = /*profile*/ ctx[0].name + "";
-    	let t;
+    	let div1;
+    	let div0;
+    	let img;
+    	let img_src_value;
+    	let t0;
+    	let div17;
+    	let h3;
+    	let t1;
+    	let t2;
+    	let div4;
+    	let div2;
+    	let t3;
+    	let t4;
+    	let div3;
+    	let t5_value = /*profile*/ ctx[0].name + "";
+    	let t5;
+    	let t6;
+    	let div7;
+    	let div5;
+    	let t7;
+    	let t8;
+    	let div6;
+    	let t9_value = /*profile*/ ctx[0].surname + "";
+    	let t9;
+    	let t10;
+    	let div10;
+    	let div8;
+    	let t11;
+    	let t12;
+    	let div9;
+    	let t13_value = /*profile*/ ctx[0].email + "";
+    	let t13;
+    	let t14;
+    	let div13;
+    	let div11;
+    	let t15;
+    	let t16;
+    	let div12;
+    	let t17_value = /*profile*/ ctx[0].age + "";
+    	let t17;
+    	let t18;
+    	let div16;
+    	let div14;
+    	let t19;
+    	let t20;
+    	let div15;
+    	let t21_value = /*profile*/ ctx[0].phone + "";
+    	let t21;
 
     	const block = {
     		c: function create() {
-    			p = element("p");
-    			t = text(t_value);
+    			div1 = element("div");
+    			div0 = element("div");
+    			img = element("img");
+    			t0 = space();
+    			div17 = element("div");
+    			h3 = element("h3");
+    			t1 = text("Personal info");
+    			t2 = space();
+    			div4 = element("div");
+    			div2 = element("div");
+    			t3 = text("First name:");
+    			t4 = space();
+    			div3 = element("div");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			div7 = element("div");
+    			div5 = element("div");
+    			t7 = text("Last name:");
+    			t8 = space();
+    			div6 = element("div");
+    			t9 = text(t9_value);
+    			t10 = space();
+    			div10 = element("div");
+    			div8 = element("div");
+    			t11 = text("Email:");
+    			t12 = space();
+    			div9 = element("div");
+    			t13 = text(t13_value);
+    			t14 = space();
+    			div13 = element("div");
+    			div11 = element("div");
+    			t15 = text("Age:");
+    			t16 = space();
+    			div12 = element("div");
+    			t17 = text(t17_value);
+    			t18 = space();
+    			div16 = element("div");
+    			div14 = element("div");
+    			t19 = text("Phone:");
+    			t20 = space();
+    			div15 = element("div");
+    			t21 = text(t21_value);
     			this.h();
     		},
     		l: function claim(nodes) {
-    			p = claim_element(nodes, "P", {});
-    			var p_nodes = children(p);
-    			t = claim_text(p_nodes, t_value);
-    			p_nodes.forEach(detach_dev);
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			img = claim_element(div0_nodes, "IMG", { src: true, class: true, alt: true });
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
+    			t0 = claim_space(nodes);
+    			div17 = claim_element(nodes, "DIV", { class: true });
+    			var div17_nodes = children(div17);
+    			h3 = claim_element(div17_nodes, "H3", {});
+    			var h3_nodes = children(h3);
+    			t1 = claim_text(h3_nodes, "Personal info");
+    			h3_nodes.forEach(detach_dev);
+    			t2 = claim_space(div17_nodes);
+    			div4 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div4_nodes = children(div4);
+    			div2 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div2_nodes = children(div2);
+    			t3 = claim_text(div2_nodes, "First name:");
+    			div2_nodes.forEach(detach_dev);
+    			t4 = claim_space(div4_nodes);
+    			div3 = claim_element(div4_nodes, "DIV", { class: true });
+    			var div3_nodes = children(div3);
+    			t5 = claim_text(div3_nodes, t5_value);
+    			div3_nodes.forEach(detach_dev);
+    			div4_nodes.forEach(detach_dev);
+    			t6 = claim_space(div17_nodes);
+    			div7 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div7_nodes = children(div7);
+    			div5 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div5_nodes = children(div5);
+    			t7 = claim_text(div5_nodes, "Last name:");
+    			div5_nodes.forEach(detach_dev);
+    			t8 = claim_space(div7_nodes);
+    			div6 = claim_element(div7_nodes, "DIV", { class: true });
+    			var div6_nodes = children(div6);
+    			t9 = claim_text(div6_nodes, t9_value);
+    			div6_nodes.forEach(detach_dev);
+    			div7_nodes.forEach(detach_dev);
+    			t10 = claim_space(div17_nodes);
+    			div10 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div10_nodes = children(div10);
+    			div8 = claim_element(div10_nodes, "DIV", { class: true });
+    			var div8_nodes = children(div8);
+    			t11 = claim_text(div8_nodes, "Email:");
+    			div8_nodes.forEach(detach_dev);
+    			t12 = claim_space(div10_nodes);
+    			div9 = claim_element(div10_nodes, "DIV", { class: true });
+    			var div9_nodes = children(div9);
+    			t13 = claim_text(div9_nodes, t13_value);
+    			div9_nodes.forEach(detach_dev);
+    			div10_nodes.forEach(detach_dev);
+    			t14 = claim_space(div17_nodes);
+    			div13 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div13_nodes = children(div13);
+    			div11 = claim_element(div13_nodes, "DIV", { class: true });
+    			var div11_nodes = children(div11);
+    			t15 = claim_text(div11_nodes, "Age:");
+    			div11_nodes.forEach(detach_dev);
+    			t16 = claim_space(div13_nodes);
+    			div12 = claim_element(div13_nodes, "DIV", { class: true });
+    			var div12_nodes = children(div12);
+    			t17 = claim_text(div12_nodes, t17_value);
+    			div12_nodes.forEach(detach_dev);
+    			div13_nodes.forEach(detach_dev);
+    			t18 = claim_space(div17_nodes);
+    			div16 = claim_element(div17_nodes, "DIV", { class: true });
+    			var div16_nodes = children(div16);
+    			div14 = claim_element(div16_nodes, "DIV", { class: true });
+    			var div14_nodes = children(div14);
+    			t19 = claim_text(div14_nodes, "Phone:");
+    			div14_nodes.forEach(detach_dev);
+    			t20 = claim_space(div16_nodes);
+    			div15 = claim_element(div16_nodes, "DIV", { class: true });
+    			var div15_nodes = children(div15);
+    			t21 = claim_text(div15_nodes, t21_value);
+    			div15_nodes.forEach(detach_dev);
+    			div16_nodes.forEach(detach_dev);
+    			div17_nodes.forEach(detach_dev);
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(p, file$3, 28, 8, 1409);
+    			if (img.src !== (img_src_value = "//placehold.it/100")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "class", "avatar img-circle");
+    			attr_dev(img, "alt", "avatar");
+    			add_location(img, file$3, 35, 16, 1640);
+    			attr_dev(div0, "class", "text-center");
+    			add_location(div0, file$3, 34, 12, 1598);
+    			attr_dev(div1, "class", "col-md-3");
+    			add_location(div1, file$3, 33, 12, 1563);
+    			add_location(h3, file$3, 41, 16, 1864);
+    			attr_dev(div2, "class", "col-lg-2");
+    			add_location(div2, file$3, 43, 20, 1941);
+    			attr_dev(div3, "class", "col-lg-6");
+    			add_location(div3, file$3, 44, 20, 2001);
+    			attr_dev(div4, "class", "row");
+    			add_location(div4, file$3, 42, 16, 1903);
+    			attr_dev(div5, "class", "col-lg-2");
+    			add_location(div5, file$3, 47, 20, 2121);
+    			attr_dev(div6, "class", "col-lg-6");
+    			add_location(div6, file$3, 48, 20, 2180);
+    			attr_dev(div7, "class", "row");
+    			add_location(div7, file$3, 46, 16, 2083);
+    			attr_dev(div8, "class", "col-lg-2");
+    			add_location(div8, file$3, 51, 20, 2303);
+    			attr_dev(div9, "class", "col-lg-6");
+    			add_location(div9, file$3, 52, 20, 2358);
+    			attr_dev(div10, "class", "row");
+    			add_location(div10, file$3, 50, 16, 2265);
+    			attr_dev(div11, "class", "col-lg-2");
+    			add_location(div11, file$3, 55, 20, 2479);
+    			attr_dev(div12, "class", "col-lg-6");
+    			add_location(div12, file$3, 56, 20, 2532);
+    			attr_dev(div13, "class", "row");
+    			add_location(div13, file$3, 54, 16, 2441);
+    			attr_dev(div14, "class", "col-lg-2");
+    			add_location(div14, file$3, 59, 20, 2651);
+    			attr_dev(div15, "class", "col-lg-6");
+    			add_location(div15, file$3, 60, 20, 2706);
+    			attr_dev(div16, "class", "row");
+    			add_location(div16, file$3, 58, 16, 2613);
+    			attr_dev(div17, "class", "col-md-9 personal-info");
+    			add_location(div17, file$3, 40, 12, 1811);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
-    			append_dev(p, t);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			append_dev(div0, img);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div17, anchor);
+    			append_dev(div17, h3);
+    			append_dev(h3, t1);
+    			append_dev(div17, t2);
+    			append_dev(div17, div4);
+    			append_dev(div4, div2);
+    			append_dev(div2, t3);
+    			append_dev(div4, t4);
+    			append_dev(div4, div3);
+    			append_dev(div3, t5);
+    			append_dev(div17, t6);
+    			append_dev(div17, div7);
+    			append_dev(div7, div5);
+    			append_dev(div5, t7);
+    			append_dev(div7, t8);
+    			append_dev(div7, div6);
+    			append_dev(div6, t9);
+    			append_dev(div17, t10);
+    			append_dev(div17, div10);
+    			append_dev(div10, div8);
+    			append_dev(div8, t11);
+    			append_dev(div10, t12);
+    			append_dev(div10, div9);
+    			append_dev(div9, t13);
+    			append_dev(div17, t14);
+    			append_dev(div17, div13);
+    			append_dev(div13, div11);
+    			append_dev(div11, t15);
+    			append_dev(div13, t16);
+    			append_dev(div13, div12);
+    			append_dev(div12, t17);
+    			append_dev(div17, t18);
+    			append_dev(div17, div16);
+    			append_dev(div16, div14);
+    			append_dev(div14, t19);
+    			append_dev(div16, t20);
+    			append_dev(div16, div15);
+    			append_dev(div15, t21);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*profile*/ 1 && t_value !== (t_value = /*profile*/ ctx[0].name + "")) set_data_dev(t, t_value);
+    			if (dirty & /*profile*/ 1 && t5_value !== (t5_value = /*profile*/ ctx[0].name + "")) set_data_dev(t5, t5_value);
+    			if (dirty & /*profile*/ 1 && t9_value !== (t9_value = /*profile*/ ctx[0].surname + "")) set_data_dev(t9, t9_value);
+    			if (dirty & /*profile*/ 1 && t13_value !== (t13_value = /*profile*/ ctx[0].email + "")) set_data_dev(t13, t13_value);
+    			if (dirty & /*profile*/ 1 && t17_value !== (t17_value = /*profile*/ ctx[0].age + "")) set_data_dev(t17, t17_value);
+    			if (dirty & /*profile*/ 1 && t21_value !== (t21_value = /*profile*/ ctx[0].phone + "")) set_data_dev(t21, t21_value);
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div17);
     		}
     	};
 
@@ -4873,41 +5123,39 @@
     		block,
     		id: create_then_block.name,
     		type: "then",
-    		source: "(28:4) {:then data}",
+    		source: "(31:8) {:then data}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (26:44)          <p>...waiting</p>     {:then data}
+    // (29:48)              <img src="/gifs/spinner.gif" alt="" style="margin: auto">         {:then data}
     function create_pending_block(ctx) {
-    	let p;
-    	let t;
+    	let img;
+    	let img_src_value;
 
     	const block = {
     		c: function create() {
-    			p = element("p");
-    			t = text("...waiting");
+    			img = element("img");
     			this.h();
     		},
     		l: function claim(nodes) {
-    			p = claim_element(nodes, "P", {});
-    			var p_nodes = children(p);
-    			t = claim_text(p_nodes, "...waiting");
-    			p_nodes.forEach(detach_dev);
+    			img = claim_element(nodes, "IMG", { src: true, alt: true, style: true });
     			this.h();
     		},
     		h: function hydrate() {
-    			add_location(p, file$3, 26, 8, 1366);
+    			if (img.src !== (img_src_value = "/gifs/spinner.gif")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", "");
+    			set_style(img, "margin", "auto");
+    			add_location(img, file$3, 29, 12, 1426);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
-    			append_dev(p, t);
+    			insert_dev(target, img, anchor);
     		},
     		p: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(img);
     		}
     	};
 
@@ -4915,7 +5163,7 @@
     		block,
     		id: create_pending_block.name,
     		type: "pending",
-    		source: "(26:44)          <p>...waiting</p>     {:then data}",
+    		source: "(29:48)              <img src=\\\"/gifs/spinner.gif\\\" alt=\\\"\\\" style=\\\"margin: auto\\\">         {:then data}",
     		ctx
     	});
 
@@ -4923,7 +5171,13 @@
     }
 
     function create_fragment$5(ctx) {
-    	let div;
+    	let div1;
+    	let h1;
+    	let t0;
+    	let t1;
+    	let hr;
+    	let t2;
+    	let div0;
     	let promise;
 
     	let info = {
@@ -4941,25 +5195,51 @@
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div1 = element("div");
+    			h1 = element("h1");
+    			t0 = text("Profile");
+    			t1 = space();
+    			hr = element("hr");
+    			t2 = space();
+    			div0 = element("div");
     			info.block.c();
     			this.h();
     		},
     		l: function claim(nodes) {
-    			div = claim_element(nodes, "DIV", { class: true });
-    			var div_nodes = children(div);
-    			info.block.l(div_nodes);
-    			div_nodes.forEach(detach_dev);
+    			div1 = claim_element(nodes, "DIV", { class: true });
+    			var div1_nodes = children(div1);
+    			h1 = claim_element(div1_nodes, "H1", {});
+    			var h1_nodes = children(h1);
+    			t0 = claim_text(h1_nodes, "Profile");
+    			h1_nodes.forEach(detach_dev);
+    			t1 = claim_space(div1_nodes);
+    			hr = claim_element(div1_nodes, "HR", {});
+    			t2 = claim_space(div1_nodes);
+    			div0 = claim_element(div1_nodes, "DIV", { class: true });
+    			var div0_nodes = children(div0);
+    			info.block.l(div0_nodes);
+    			div0_nodes.forEach(detach_dev);
+    			div1_nodes.forEach(detach_dev);
     			this.h();
     		},
     		h: function hydrate() {
-    			attr_dev(div, "class", "container");
-    			add_location(div, file$3, 24, 0, 1289);
+    			add_location(h1, file$3, 25, 4, 1317);
+    			add_location(hr, file$3, 26, 4, 1338);
+    			attr_dev(div0, "class", "row");
+    			add_location(div0, file$3, 27, 4, 1347);
+    			attr_dev(div1, "class", "container");
+    			add_location(div1, file$3, 24, 0, 1289);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			info.block.m(div, info.anchor = null);
-    			info.mount = () => div;
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, h1);
+    			append_dev(h1, t0);
+    			append_dev(div1, t1);
+    			append_dev(div1, hr);
+    			append_dev(div1, t2);
+    			append_dev(div1, div0);
+    			info.block.m(div0, info.anchor = null);
+    			info.mount = () => div0;
     			info.anchor = null;
     		},
     		p: function update(new_ctx, [dirty]) {
@@ -4974,7 +5254,7 @@
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div1);
     			info.block.d();
     			info.token = null;
     			info = null;
