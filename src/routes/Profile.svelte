@@ -1,6 +1,7 @@
 <script lang="typescript">
-    import { onMount } from 'svelte';
+    import { onMount } from "svelte";
     import { AuthService } from "../services/auth.service";
+    import { ProfileService } from "../services/profile.service";
 
     const authService = AuthService.getInstance();
 
@@ -9,22 +10,21 @@
         });
     });
 
-    let testTS: string = "Hello TypeScript";
-    let testSCSS: string = "Hello SCSS";
+    let profile;
+    const profileService = ProfileService.getInstance();
+    profileService.getUserProfile().then(data => profile = data?.user).catch(e => console.warn(e));
 </script>
 
 <style type="text/scss">
-    div{
-        color: red;
-        
-        span{
-            color: blue;
-        }
-    }
 </style>
 
-<div>
-    {testTS}
-    <span>{testSCSS}</span>
+<div class="container">
+    {#await profileService.getUserProfile()}
+        <p>...waiting</p>
+    {:then data}
+        <p>{profile.name}</p>
+    {:catch error}
+        <p>An error occurred!</p>
+    {/await}
 </div>
 
