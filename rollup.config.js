@@ -6,6 +6,8 @@ import autoPreprocess from "svelte-preprocess";
 import { terser } from "rollup-plugin-terser";
 import sass from 'rollup-plugin-sass';
 import json from '@rollup/plugin-json';
+import image from 'svelte-image'
+import copy from 'rollup-plugin-copy'
 
 const isDev = Boolean(process.env.ROLLUP_WATCH);
 
@@ -31,6 +33,9 @@ export default [
           css.write("public/bundle.css");
         },
         preprocess: autoPreprocess(),
+      }),
+      copy({
+        targets: [{ src: 'static/*', dest: 'public' }],
       }),
       resolve(),
       commonjs(),
