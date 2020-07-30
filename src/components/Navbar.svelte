@@ -9,6 +9,10 @@
             label: 'Login'
         },
         {
+            route: '/profile',
+            label: 'profile'
+        },
+        {
             route: '/register',
             label: 'Register'
         },
@@ -27,6 +31,10 @@
             route: '/logout',
             label: 'Logout',
             isLogout: true
+        },
+        {
+            route: '/profile',
+            label: 'profile'
         },
         {
             route: '/gamiyole',

@@ -28,8 +28,26 @@ export class ProfileService {
                     })
                 });
                 result = await response.json();
+                result.isOwn = true;
             }
             return result.user;
         } else return; 
+    }
+
+    async updateUserProfile(user, authService) {
+        if(DeviceDetectorService.isBrowser){
+            let tmpUser = Object.assign({}, user);
+            tmpUser.token = authService.getToken();
+            const response = await fetch(`${Config.baseAPIUrl}/profile-edit`, {
+                method: "POST",
+                body: JSON.stringify({
+                    token: tmpUser.token,
+                    name: tmpUser.name,
+                    phone: tmpUser.phone,
+                    surname: tmpUser.surname
+                })
+            });
+            return;
+        }
     }
 }

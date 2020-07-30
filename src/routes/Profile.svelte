@@ -3,18 +3,26 @@
     import { AuthService } from "../services/auth.service";
     import { ProfileService } from "../services/profile.service";
     import { navigate } from "svelte-routing";
+    import { DeviceDetectorService } from '../services/deviceDetectorService.service';
 
     const authService = AuthService.getInstance();
+    let isOwn;
 
     onMount(async () => {
         authService.validateTokenAndNavigate().then(res => {
         });
     });
-
+    if(DeviceDetectorService.isBrowser){
+        const qEmail = new URLSearchParams(window.location.search).get("email");
+        isOwn = qEmail === null ? true : false;
+    }
     const profileService = ProfileService.getInstance();
 </script>
 
 <style type="text/scss">
+    .btn{
+        margin-top: 50px;
+    }
 </style>
 
 <div class="container">
@@ -26,9 +34,12 @@
         {:then profile}
             <!-- left column -->
             <div class="col-md-3">
-            <div class="text-center">
+            <div >
                 <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
             </div>
+                {#if isOwn}
+                    <input type="submit" class="btn btn-primary" on:click="" value="Edit brofile">
+                {/if}
             </div>
             
             <!-- edit form column -->
