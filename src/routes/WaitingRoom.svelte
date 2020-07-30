@@ -8,8 +8,13 @@
   import MapForRoutes from "../components/MapForRoutes.svelte";
 
   let destination;
-  let gamiyole;
+  let isGamiyole;
   let isInitMap;
+  let person;
+
+  let gamyoleebisArr = [];
+  let acceptedGamyoleebisArr = [];
+  let declinedGamyoleebisArr = [];
 
   const authService = AuthService.getInstance();
 
@@ -25,72 +30,58 @@
     authService.validateTokenAndNavigate().then(res => {});
     const url = new URL(location.href);
     const params = url.searchParams;
-    gamiyole = params.get("gamiyole") === "true";
     destination = params.get("destination");
-    const startTime = params.get("startTime");
-    const endTime = params.get("endTime");
-    const time = params.get("time");
-    const seats = params.get("seats");
-    const matcherService = MatcherService.getInstance();
-    // matcherService.connect().then(() => {
-    //   let toSend = {};
-    //   if(gamiyole) {
-    //     toSend = {
-    //       gamiyole,
-    //       destination,
-    //       startTime,
-    //       endTime,
-    //       fromUni : DeviceDetectorService.isAtUni()
-    //     }
-    //   }
-    //   else {
-    //     toSend = {
-    //       gamiyole,
-    //       destination,
-    //       time,
-    //       seats,
-    //       fromUni : DeviceDetectorService.isAtUni()
-    //     }
-    //   }
-    //   matcherService.send(toSend)
-    // });
+    isGamiyole = params.get('gamiyole') === "true";
   });
+
+  function onGamiyoleebi(event) {
+    gamyoleebisArr = event.detail.arr;
+    console.log('waitingRoomidan ', gamyoleebisArr);
+  }
+
 </script>
 
 <style>
   .wrapper {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     position: relative;
   }
 
   .map {
-    width: 50vw;
-    height: 100vh;
-    position: absolute;
+    width: 50%;
+    height: 100%;
+    position: fixed;
     right: 0;
   }
 
   .suggestions {
-    width: 50vw;
-    height: 100vh;
+    width: 50%;
+    /* height: 100%; */
     position: absolute;
     left: 0;
     display: flex;
+    flex-wrap: wrap;
+    flex-flow: column;
     justify-content: center;
     align-items: center;
   }
 
+  .card-body {
+    cursor: pointer;
+  }
+
+
   @media only screen and (max-width: 800px) {
     .map {
-      width: 100vw;
-      height: 60vh;
+      width: 100%;
+      height: 60%;
       top: 0;
     }
 
     .suggestions {
-      width: 100vw;
-      height: 40vh;
+      width: 100%;
+      height: 40%;
       bottom: 0;
     }
   }
@@ -99,17 +90,40 @@
 <div class="wrapper">
   <div class="map">
     {#if isInitMap}
-      <MapForRoutes class="map" startLocation="აგრარული უნივერსიტეტი (ეკლესია), D. Aghmashenebeli Ave, T'bilisi, Georgia" endLocation={destination} gamiyole={gamiyole}/>
+      <MapForRoutes class="map" on:gamiyoleebi={onGamiyoleebi} on:wamyole={(data) => console.log(data)}
+        startLocation="აგრარული უნივერსიტეტი (ეკლესია), D. Aghmashenebeli Ave, T'bilisi, Georgia" 
+        endLocation={destination}
+        {person}/>
     {/if}
   </div>
   <div class="suggestions">
-    hi<br>
-    hi<br>
-    
-    hi<br>
-    
-    hi<br>
-    
-    hi<br>
+    {#if !isGamiyole}
+      {#each gamyoleebisArr as gamyoleli}
+        <div class="inner-div">
+          <!-- {JSON.stringify(gamyoleli)}-->
+          <div class="card" style="width: 18rem;">
+            <div class="card-body" on:click={() => person = gamyoleli}>
+              <h5 class="card-title">Email: {gamyoleli.email}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Time: {gamyoleli.startTime} - {gamyoleli.endTime}</h6>
+              <!-- <Link type="button" class="btn btn-primary" to="----------------AQ CHAWERE LASHA, EMAILI GVAQVS--------------" >Profile</Link> -->
+              <button type="button" class="btn btn-success" on:click={() => {
+                acceptedGamyoleebisArr.push(gamyoleli)
+                gamyoleebisArr = gamyoleebisArr.filter(g => !declinedGamyoleebisArr.find(r => r.email === g.email) && !acceptedGamyoleebisArr.find(r => r.email === g.email))
+              }}>Accept</button>
+              <button type="button" class="btn btn-danger" on:click={() => {
+                declinedGamyoleebisArr.push(gamyoleli)
+                gamyoleebisArr = gamyoleebisArr.filter(g => !declinedGamyoleebisArr.find(r => r.email === g.email) && !acceptedGamyoleebisArr.find(r => r.email === g.email))
+              }}>Decline</button>
+            </div>
+          </div> 
+        </div>
+      {/each}
+    {:else}
+      <!-- {#each gamiyoleebisArr as gamyoleli}
+        <div class="inner-div">
+
+        </div>
+      {/each} -->
+    {/if}
   </div>
 </div>

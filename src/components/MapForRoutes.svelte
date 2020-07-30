@@ -5,7 +5,10 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
   import { MatcherService } from "../services/matcher.service"
+  import { createEventDispatcher } from 'svelte';
 
+      
+  const dispatch = createEventDispatcher();
   const googleService = GoogleService.getInstance();
   let container;
   let map;
@@ -16,20 +19,73 @@
   };
   let directionsService;
   let directionsRenderer;
+  let marker;
   export let startLocation = "";
   export let endLocation = "";
-  export let gamiyole;
+  export let person;
+
+  $: {
+    if(person && marker && person.lat && person.lng) {
+      marker.setVisible(true);
+      let latLng = new google.maps.LatLng(person.lat, person.lng)
+      marker.setPosition(latLng);
+      map.panTo(latLng);
+    }
+  }
+  
 
   onMount(async () => {
+    const url = new URL(location.href);
+    const params = url.searchParams;
+    const gamiyole = params.get("gamiyole") === "true";
+    const destination = params.get("destination");
+    const startTime = params.get("startTime");
+    const endTime = params.get("endTime");
+    const time = params.get("time");
+    const seats = params.get("seats");
+
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
     const matcherService = MatcherService.getInstance();
-    matcherService.connect( event => {
-      console.log(JSON.parse(JSON.parse(event.data).content));
-    });
+    matcherService.connect(event => {
+      const parsedData = JSON.parse(JSON.parse(event.data).content);
+      console.log(parsedData);
+      if(parsedData.isGamyoleebi) {
+        dispatch('gamiyoleebi', parsedData);
+      }
+      if(parsedData.isWamyole)
+      dispatch('wamyole', parsedData);
+    })
+      .then(() => {
+        let toSend = {};
+        if(gamiyole) {
+          toSend = {
+            gamiyole,
+            destination,
+            startTime,
+            endTime,
+            fromUni : DeviceDetectorService.isAtUni()
+          }
+        }
+        else {
+          toSend = {
+            gamiyole,
+            destination,
+            time,
+            seats,
+            fromUni : DeviceDetectorService.isAtUni()
+          }
+        }
+        matcherService.send(toSend);
+      });
+
     map = new google.maps.Map(container, {
       zoom,
       center,
+    });
+    marker = new google.maps.Marker({
+      map,
+      visible: false
     });
     directionsRenderer.setMap(map);
     directionsService.route(
