@@ -9,12 +9,10 @@ export class MatcherService {
         return this._instance || (this._instance = new this());
     }
 
-    connect() {
+    connect(func) {
         return new Promise((res, rej) => {
             this.ws = new WebSocket("ws://localhost:8082/match/"+ AuthService.getInstance().getToken());
-            this.ws.onmessage = function (event) {
-                console.log(event.data);
-            };
+            this.ws.onmessage = func;
             this.ws.onopen = function (event) {
                 res();   
             }
