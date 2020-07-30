@@ -2,35 +2,44 @@
     import { onMount } from "svelte";
     import { AuthService } from "../services/auth.service";
     import { ProfileService } from "../services/profile.service";
+    import { navigate } from "svelte-routing";
+    import { DeviceDetectorService } from '../services/deviceDetectorService.service';
 
     const authService = AuthService.getInstance();
+    let isOwn;
 
     onMount(async () => {
         authService.validateTokenAndNavigate().then(res => {
         });
     });
-
-    let profile;
+    if(DeviceDetectorService.isBrowser){
+        const qEmail = new URLSearchParams(window.location.search).get("email");
+        isOwn = qEmail === null ? true : false;
+    }
     const profileService = ProfileService.getInstance();
-    profileService.getUserProfile().then(data => profile = data?.user).catch(e => console.warn(e));
 </script>
 
 <style type="text/scss">
+    .btn{
+        margin-top: 50px;
+    }
 </style>
 
 <div class="container">
     <h1>Profile</h1>
     <hr>
     <div class="row">
-        {#await profileService.getUserProfile()}
+        {#await profileService.getUserProfile(authService)}
             <img src="/gifs/spinner.gif" alt="" style="margin: auto">
-        {:then data}
-            
+        {:then profile}
             <!-- left column -->
             <div class="col-md-3">
-            <div class="text-center">
+            <div >
                 <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
             </div>
+                {#if isOwn}
+                    <input type="submit" class="btn btn-primary" on:click="" value="Edit brofile">
+                {/if}
             </div>
             
             <!-- edit form column -->

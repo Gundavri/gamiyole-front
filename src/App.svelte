@@ -10,15 +10,19 @@
   import Gamiyole from './routes/Gamiyole.svelte';
   import Gagiyoleb from './routes/Gagiyoleb.svelte';
   import MapApp from './routes/MapApp.svelte';
+  import Navbar from "./components/Navbar.svelte";
+  import ProfileEdit from "./routes/ProfileEdit.svelte";
   
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";
 </script>
 
+<Navbar />
 <Router url="{url}">
 	  <Route path="login" component="{Login}" />
 	  <Route path="register" component="{Register}" />
     <Route path="profile" component="{Profile}" />
+    <Route path="profile/edit" component="{ProfileEdit}" />
     <Route path="/" component="{Home}" />
     <Route path="gamiyole" component="{Gamiyole}" />
     <Route path="gagiyoleb" component="{Gagiyoleb}" />
