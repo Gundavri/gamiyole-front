@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { AuthService } from "../services/auth.service";
     import { ProfileService } from "../services/profile.service";
+    import { navigate } from "svelte-routing";
 
     const authService = AuthService.getInstance();
 
@@ -10,9 +11,7 @@
         });
     });
 
-    let profile;
     const profileService = ProfileService.getInstance();
-    profileService.getUserProfile().then(data => profile = data?.user).catch(e => console.warn(e));
 </script>
 
 <style type="text/scss">
@@ -22,10 +21,9 @@
     <h1>Profile</h1>
     <hr>
     <div class="row">
-        {#await profileService.getUserProfile()}
+        {#await profileService.getUserProfile(authService)}
             <img src="/gifs/spinner.gif" alt="" style="margin: auto">
-        {:then data}
-            
+        {:then profile}
             <!-- left column -->
             <div class="col-md-3">
             <div class="text-center">
