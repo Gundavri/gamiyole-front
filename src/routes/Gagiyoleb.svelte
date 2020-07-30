@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { DeviceDetectorService } from "../services/deviceDetectorService.service";
   import { GoogleService } from "../services/google.service";
-  import { Link } from "svelte-routing";
+  import { Link, navigate } from "svelte-routing";
   import { AuthService } from "../services/auth.service";
 
   const googleService = GoogleService.getInstance();
@@ -55,30 +55,11 @@
 
 
   if (DeviceDetectorService.isBrowser && window.navigator) {
-    isAtUni();
-  }
-
-  function isAtUni() {
-    let lat, lng;
-    navigator.geolocation.getCurrentPosition((pos) => {
-      lat = pos.coords.latitude;
-      lng = pos.coords.longitude;
-
-      const distanceFromCenter = Math.sqrt(
-        Math.pow(lat - DeviceDetectorService.latUni, 2) +
-          Math.pow(lng - DeviceDetectorService.lngUni, 2)
-      );
-
-      if (distanceFromCenter <= DeviceDetectorService.maxAllowedDist) {
-        fromUni = true;
-      } else {
-        fromUni = false;
-      }
-    });
+    fromUni = DeviceDetectorService.isAtUni();
   }
 
   function onSubmit() {
-    console.log("submit");
+    navigate(`/wait?destination=${destination}&time=${time}&seats=${seats}&gamiyole=false`)
   }
 
   function getAutoCompletedData() {

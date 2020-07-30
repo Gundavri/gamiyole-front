@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "^4.17.1",
+    "net": "^1.0.2",
     "nodemon": "^2.0.2",
     "npm-run-all": "^4.1.5",
     "rollup": "^1.31.0",

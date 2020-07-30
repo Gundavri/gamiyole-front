@@ -5,7 +5,7 @@
 
     let visible = false;
     const authService = AuthService.getInstance();
-    
+
     onMount(() => {
         authService.validateTokenAndNavigate().then(res => {
             if(res) {
