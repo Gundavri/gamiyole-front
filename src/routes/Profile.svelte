@@ -38,7 +38,7 @@
                 <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
             </div>
                 {#if isOwn}
-                    <input type="submit" class="btn btn-primary" on:click="" value="Edit brofile">
+                    <input type="submit" class="btn btn-primary" on:click="{() => navigate("/profile/edit")}" value="Edit brofile">
                 {/if}
             </div>
             
