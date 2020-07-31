@@ -20,9 +20,14 @@
   let directionsService;
   let directionsRenderer;
   let marker;
+  let matcherService;
+  let connected = false;
   export let startLocation = "";
   export let endLocation = "";
   export let person;
+  export let acceptedGamyoli;
+  export let declinedGamyoli;
+  export let secondAccept;
 
   $: {
     if(person && marker && person.lat && person.lng) {
@@ -33,6 +38,38 @@
     }
   }
   
+  $: {
+    if(connected && acceptedGamyoli) {
+      matcherService.send({
+        content: JSON.stringify({
+          key: "Accapted Gamyoli",
+          email: acceptedGamyoli.email
+        })
+      });
+    }
+  }
+
+  $: {
+    if(connected && declinedGamyoli) {
+      matcherService.send({
+        content: JSON.stringify({
+          key: "Declined Gamyoli",
+          email: declinedGamyoli.email
+        })
+      });
+    }
+  }
+
+  $:{
+    if(connected && secondAccept) {
+      matcherService.send({
+        content: JSON.stringify({
+          key: "Accepted Wamyoli",
+          email: secondAccept.email
+        })
+      });
+    }
+  }
 
   onMount(async () => {
     const url = new URL(location.href);
@@ -46,17 +83,23 @@
 
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
-    const matcherService = MatcherService.getInstance();
+    matcherService = MatcherService.getInstance();
     matcherService.connect(event => {
       const parsedData = JSON.parse(JSON.parse(event.data).content);
       console.log(parsedData);
+      window.e = event;
       if(parsedData.isGamyoleebi) {
         dispatch('gamiyoleebi', parsedData);
       }
-      if(parsedData.isWamyole)
-      dispatch('wamyole', parsedData);
+      if(parsedData.isWamyole) {
+        dispatch('wamyole', parsedData);
+      }
+      if(parsedData.timeToChat) {
+        window.open(`http://localhost:3000/chat?to=${secondAccept?secondAccept.email:acceptedGamyoli.email}`, "_blank");
+      }
     })
       .then(() => {
+        connected = true;
         let toSend = {};
         if(gamiyole) {
           toSend = {

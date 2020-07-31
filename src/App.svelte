@@ -12,6 +12,7 @@
   import Gagiyoleb from './routes/Gagiyoleb.svelte';
   import MapApp from './routes/MapApp.svelte';
   import WaitingRoom from './routes/WaitingRoom.svelte';
+  import Chat from './routes/Chat.svelte'
   
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";
@@ -29,4 +30,5 @@
     <Route path="gagiyoleb" component="{Gagiyoleb}" />
     <Route path="map" component="{MapApp}" />
     <Route path="wait" component="{WaitingRoom}" />
+    <Route path="chat" component="{Chat}" />
 </Router>
