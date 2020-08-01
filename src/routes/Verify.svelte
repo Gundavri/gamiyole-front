@@ -9,12 +9,9 @@
     let isError = false;
     let errorMsg = '';
     
-    
     onMount(() => {
-
         const url = new URL(location.href);
         const hash = url.searchParams.get('hash');
-
         if(!hash) {
             isError = true;
             isLoading = false;

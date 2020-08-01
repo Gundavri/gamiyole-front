@@ -13,7 +13,6 @@ export class AuthService {
     async validateTokenAndNavigate() {
         if(!this.getToken()) {
             navigate('/login');
-            console.log('araDzmao')
             return false;
         } else {
             const res = await this.validateToken();
@@ -75,7 +74,6 @@ export class AuthService {
     deleteToken() {
         if(DeviceDetectorService.isBrowser) {
             localStorage.removeItem(this.TOKEN_KEY);
-            this.validateTokenAndNavigate().then(r => {});
         }
     }
 

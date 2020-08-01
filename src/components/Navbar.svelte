@@ -50,10 +50,12 @@
     const authService = AuthService.getInstance();
 
     onMount(async () => {
-        authService.validateTokenAndNavigate().then(res => {
-            if(res) currRoutes = Routes_For_Authenticated_Users;
-            else currRoutes = Routes;
-        });
+        if(!location.href.includes('hash')) {
+            authService.validateTokenAndNavigate().then(res => {
+                if(res) currRoutes = Routes_For_Authenticated_Users;
+                else currRoutes = Routes;
+            });
+        }
     });
 
     function onNavigate(route) {

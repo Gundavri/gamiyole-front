@@ -89,8 +89,8 @@
 
 <style>
   .full-screen {
-    width: 100vw;
-    height: 90vh;
+    width: 100%;
+    height: 80%;
   }
 </style>
 
