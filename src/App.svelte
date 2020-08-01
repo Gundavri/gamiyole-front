@@ -13,6 +13,7 @@
   import MapApp from './routes/MapApp.svelte';
   import WaitingRoom from './routes/WaitingRoom.svelte';
   import Chat from './routes/Chat.svelte'
+  import Verify from './routes/Verify.svelte';
   
   // Used for SSR. A falsy value is ignored by the Router.
   export let url = "";
@@ -31,4 +32,5 @@
     <Route path="map" component="{MapApp}" />
     <Route path="wait" component="{WaitingRoom}" />
     <Route path="chat" component="{Chat}" />
+    <Route path="verify" component="{Verify}" />
 </Router>

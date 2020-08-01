@@ -53,6 +53,13 @@ export class AuthService {
         return res;
     }
 
+    async verifyUser(hash) {
+        const res = await (await fetch(Config.baseAPIUrl + '/verification?hash=' + hash, {
+            method: 'POST'
+        })).json();
+        return res;
+    }
+
     setToken(token) {
         if(DeviceDetectorService.isBrowser) {
             localStorage.setItem(this.TOKEN_KEY, token);
