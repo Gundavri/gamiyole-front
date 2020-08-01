@@ -95,4 +95,4 @@
 </style>
 
 <div class="full-screen" bind:this={container} />
-<button on:click={onSubmit}>Submit</button>
+<button type="button" class="btn btn-primary" on:click={onSubmit}>Submit</button>
