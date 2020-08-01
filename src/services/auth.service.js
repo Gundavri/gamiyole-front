@@ -75,6 +75,7 @@ export class AuthService {
     deleteToken() {
         if(DeviceDetectorService.isBrowser) {
             localStorage.removeItem(this.TOKEN_KEY);
+            this.validateTokenAndNavigate().then(r => {});
         }
     }
 
